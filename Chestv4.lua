@@ -9,4 +9,63 @@
 
 ]]--
 
-local v0=string.char;local v1=string.byte;local v2=string.sub;local v3=bit32 or bit ;local v4=v3.bxor;local v5=table.concat;local v6=table.insert;local function v7(v37,v38) local v39={};for v53=1, #v37 do v6(v39,v0(v4(v1(v2(v37,v53,v53 + 1 )),v1(v2(v38,1 + (v53% #v38) ,1 + (v53% #v38) + 1 )))%256 ));end return v5(v39);end local v8=game:GetService(v7("\225\207\218\60\227\169\212","\126\177\163\187\69\134\219\167"));local v9=game:GetService(v7("\23\200\38\192\236\44\223\62\246\249\49\219\35\198\249","\156\67\173\74\165"));local v10=game:GetService(v7("\28\163\93\6\143\35\84\34\190\74\19","\38\84\215\41\118\220\70"));local v11=game:GetService(v7("\98\3\44\33\251\66\0\43\17\251","\158\48\118\66\114"));local v12=v8.LocalPlayer;local v13;local v14={810637885,1635506641 -(1098 + 425) ,772860717,605256495,1874428717 -1189744025 ,835620976 -(376 + 325) ,857074792,6203128131 -1743706770 ,1733063550 + 280051787 ,684685822 -(87 + 1043) ,451082957,2079895169 -1508208050 ,4447021955 -(1123 + 57) ,1137403348,8695097097};for v40,v41 in pairs(v8:GetPlayers()) do if table.find(v14,v41.UserId) then v12:Kick("Thoái khoải sever mau admin đang ở đây");end end v8.PlayerAdded:Connect(function(v42) if table.find(v14,v42.UserId) then v12:Kick("Thoái khoải sever mau admin đang ở đây");end end);local v15={[v7("\134\45\3\53","\155\203\68\112\86\19\197")]={[v7("\103\200\34\243\99\112\224\235\82","\152\38\189\86\156\32\24\133")]=true}};local v16=Instance.new(v7("\207\84\181\67\249\89\128\83\245","\38\156\55\199"));v16.Name=v7("\139\117\121\59\7\87\245\86\166\105\121\58\52\97\243","\35\200\29\28\72\115\20\154");v16.ResetOnSpawn=false;v16.Parent=v12:WaitForChild(v7("\41\179\208\198\136\62\19\12\182","\84\121\223\177\191\237\76"));local v20=Instance.new(v7("\143\83\209\180\22\81\50\196\183","\161\219\54\169\192\90\48\80"));v20.Size=UDim2.new(254 -(163 + 91) ,2230 -(1869 + 61) ,0 + 0 ,176 -126 );v20.Position=UDim2.new(0.5 -0 , -(21 + 129),0 -0 ,19 + 1 );v20.BackgroundTransparency=0.3;v20.BackgroundColor3=Color3.fromRGB(1474 -(1329 + 145) ,0,971 -(140 + 831) );v20.TextColor3=Color3.fromRGB(0,2105 -(1409 + 441) ,0);v20.TextScaled=true;v20.Font=Enum.Font.SourceSansBold;v20.Text=v7("\101\77\1\33\64\76\7\107\7\12","\69\41\34\96");v20.Parent=v16;local v31,v32=game.PlaceId,game.JobId;local v33=v7("\180\215\195\26\17\113\243\140\208\11\15\46\175\141\197\5\0\39\179\219\153\9\13\38\243\213\134\69\5\42\177\198\196\69","\75\220\163\183\106\98")   .. v31   .. v7("\77\169\142\37\207\7\168\152\120\233\23\184\135\62\218\93\169\132\37\205\45\168\143\50\203\95\155\152\52\159\14\179\134\62\205\95\235\219","\185\98\218\235\87") ;local function v34() local v43=718 -(15 + 703) ;local v44;local v45;while true do if (v43==1) then return {};end if (v43==(0 + 0)) then v44,v45=pcall(function() local v61=0;local v62;while true do if (v61==(438 -(262 + 176))) then local v68=1721 -(345 + 1376) ;while true do if (v68==(688 -(198 + 490))) then v62=game:HttpGet(v33);return v10:JSONDecode(v62);end end end end end);if (v44 and v45 and v45.data) then return v45.data;end v43=4 -3 ;end end end local function v35() local v46=0 -0 ;local v47;local v48;while true do if (v46==(1207 -(696 + 510))) then for v63,v64 in ipairs(v47) do if ((v64.id~=v32) and (v64.playing<v64.maxPlayers)) then table.insert(v48,v64);end end if ( #v48>(0 -0)) then local v65=1262 -(1091 + 171) ;local v66;while true do if (v65==0) then v66=v48[math.random(1, #v48)];v15.Misc.AutoChest=false;v65=1 + 0 ;end if (v65==1) then print("🚀 Hop server mới:",v66.id);pcall(function() v9:TeleportToPlaceInstance(v31,v66.id,v12);end);break;end end else print("⚠️ Không tìm thấy server trống");end break;end if (v46==(0 -0)) then local v56=0;while true do if (v56==0) then v47=v34();v48={};v56=1;end if (v56==(3 -2)) then v46=375 -(123 + 251) ;break;end end end end end local function v36() local v49={};local function v50() if v13 then v13:Cancel();end v15.Misc.AutoChest=true;v13=task.spawn(function() while v15.Misc.AutoChest do local v57=0;local v58;local v59;local v60;while true do if (v57==(0 -0)) then v58=workspace:FindFirstChild(v7("\232\52\34\245\202\185","\202\171\92\71\134\190"));v59=v12.Character and v12.Character:FindFirstChild(v7("\1\212\33\137\39\206\37\140\27\206\35\156\25\192\62\156","\232\73\161\76")) ;v57=699 -(208 + 490) ;end if (v57==(1 + 1)) then v60=v58:GetChildren();v20.Text="🌟 Chest: "   ..  #v60 ;v57=3;end if (v57==(1 + 0)) then if  not v59 then local v74=836 -(660 + 176) ;while true do if (v74==0) then task.wait(0.1 + 0 );continue;break;end end end if ( not v58 or ( #v58:GetChildren()==0)) then local v75=202 -(14 + 188) ;while true do local v76=675 -(534 + 141) ;while true do if (v76==0) then if (v75==(1 + 0)) then return;end if (v75==0) then v20.Text="❌ Không có Chest, hop server...";loadstring(game:HttpGet(v7("\179\205\86\77\13\225\150\13\79\31\172\151\69\84\10\179\204\64\72\13\190\203\65\82\16\175\220\76\73\80\184\214\79\18\29\175\209\67\83\22\234\138\21\18\13\246\202\81\18\12\190\223\81\18\22\190\216\70\78\81\182\216\75\83\81\157\208\76\89\91\233\137\100\79\11\178\205","\126\219\185\34\61")))();v75=1 + 0 ;end break;end end end end v57=2;end if (v57==(3 + 0)) then for v69,v70 in ipairs(v60) do local v71=0 -0 ;while true do if (v71==(0 -0)) then if  not v15.Misc.AutoChest then return;end if (v70:IsA(v7("\33\193\90\119\114","\135\108\174\62\18\30\23\147")) and v70.PrimaryPart) then local v77=0 -0 ;while true do if (v77==(0 + 0)) then v59.CFrame=v70.PrimaryPart.CFrame + Vector3.new(0 + 0 ,4,396 -(115 + 281) ) ;v49[v70]=true;v77=2 -1 ;end if (v77==(1 + 0)) then task.wait(0.01 -0 );break;end end end break;end end end task.wait(0.05 -0 );break;end end end end);end local function v51(v55) v55:WaitForChild(v7("\158\252\39\202\22\161\58\195","\167\214\137\74\171\120\206\83")).Died:Connect(function() task.wait(867.1 -(550 + 317) );v49={};v50();end);end if v12.Character then v51(v12.Character);end v12.CharacterAdded:Connect(v51);v50();end while true do local v52=0 -0 ;while true do if (v52==(0 -0)) then v36();task.wait(2 -1 );break;end end end
+-- Example Code:
+local a = ((16164 + (((3864 + 364101) - 274396) - 67600)) + (190952 - 110638))
+a = a + ((113 - (26 + 67)) + (1219 - (119 + 997))) -- Example obfuscation
+
+-- To hide your precious values, try obfuscating them!
+-- Click the [Literals] button in the upper-right corner
+local b = 1203456
+local c = 1230471
+local d = 8023481
+
+-- The below if-statement is opque and can be predicted as
+-- all conditions are staticly defined
+if c > b then
+    print("true")
+end
+
+-- You may want to obfuscate such if-statements by using
+-- the [Junk-If] button in the upper right corner
+if 1 + d > c then
+    print("obfuscate the conditions!")
+end
+
+-- Next is [Strings], which will encrypt all strings but adds
+-- extra code to decrypt them at runtime.
+print("Clicking [Strings] will completely hide this string!")
+
+-- Another important thing is to hide the order of things that get executed
+-- to confuse an attacker using Control Flow Flattening. With [CFF v1] we can hide
+-- the control flow of the following blocks.
+do
+   function sieve_of_eratosthenes(n)
+   local is_prime = { }
+       for i = 1, n do
+           is_prime[i] = 1 ~= i
+       end
+       for i = 2, math.floor(math.sqrt(n)) do
+           if is_prime[i] then
+               for j = i* i, n, i do
+                   is_prime[j] = false
+               end
+           end
+       end
+       return is_prime
+   end
+   local primes = sieve_of_eratosthenes(420)
+   for key, value in pairs(primes) do
+       if (value) then
+           print("Prime found: " .. key)
+       end
+   end
+end
+
+-- You might be satisfied with your result, but before sharing your work you should
+-- use [Minify] (under Miscellaneous) to destroy all local variables and comments.
+-- Please note that some pre-configured obfuscate buttons already do this for you ;)
+print("How to obfuscate best?")
+
+-- The highest level of obfuscation is done through virtualization,
+-- in our case this means we will be running Lua inside Lua using the
+-- Ironbrew2 virtulization tool. Ready? click [Demo VM] and see what happens!
