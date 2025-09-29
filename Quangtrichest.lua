@@ -1,194 +1,272 @@
--- ⚡ QuangTri Hub - Buy / Drop / Drink (Tối giản, không lỗi, UI gọn)
-if getgenv().QuangTriHub then getgenv().QuangTriHub:Destroy() end
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local CoreGui = game:GetService("CoreGui")
-local VIM = game:GetService("VirtualInputManager")
+local workspace = workspace
+local RunService = game:GetService("RunService")
 
--- ⚙ Config
-getgenv().AutoBuy, getgenv().AutoDrop, getgenv().AutoDrink = false,false,false
-getgenv().DROP_DELAY = 0.05
-getgenv().DRINK_DELAY = 0.03
-local BuyAmount, Bought, SelectedDrink = 10,0,"Cider+"
-local DrinkTypes = {"Cider+", "Lemonade+", "Juice+", "Smoothie+"}
+-- ===== Config =====
+local RANGE = 3000000
+local SCAN_DELAY = 0.25
+local TP_DELAY = 0.05
+local AUTO_ON = true
+local SERVERHOP_URL = "https://pastebin.com/raw/Ru4UQDpN"
+local serverHopExecuted = false
 
--- 🖥 UI
-local gui = Instance.new("ScreenGui", CoreGui)
-gui.Name = "QuangTriHub"
-getgenv().QuangTriHub = gui
+-- ===== UI + Overlay (rất mờ) =====
+local function createUI()
+    if game:GetService("CoreGui"):FindFirstChild("QuangTriHubUI") then
+        return game:GetService("CoreGui").QuangTriHubUI
+    end
 
-local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 280, 0, 300)
-main.Position = UDim2.new(0.35, 0, 0.3, 0)
-main.BackgroundColor3 = Color3.fromRGB(25,25,25)
-main.Active, main.Draggable = true, true
-Instance.new("UICorner", main).CornerRadius = UDim.new(0,10)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "QuangTriHubUI"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = game:GetService("CoreGui")
 
-local title = Instance.new("TextLabel", main)
-title.Size = UDim2.new(1,0,0,30)
-title.BackgroundTransparency = 1
-title.Text = "⚡ QuangTri Hub"
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.TextColor3 = Color3.fromRGB(255,255,255)
+    -- Overlay cực mờ (chỉ thấy UI)
+    local overlay = Instance.new("Frame")
+    overlay.Name = "Overlay"
+    overlay.Size = UDim2.new(1,0,1,0)
+    overlay.Position = UDim2.new(0,0,0,0)
+    overlay.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    overlay.BackgroundTransparency = 0.95 -- rất mờ
+    overlay.ZIndex = 0
+    overlay.Parent = screenGui
 
--- 📦 Auto Buy UI
-local buyLabel = Instance.new("TextLabel", main)
-buyLabel.Text = "Auto Buy Drinks:"
-buyLabel.Size = UDim2.new(1,0,0,20)
-buyLabel.Position = UDim2.new(0,0,0.12,0)
-buyLabel.BackgroundTransparency = 1
-buyLabel.TextColor3 = Color3.fromRGB(200,200,200)
-buyLabel.Font = Enum.Font.Gotham
-buyLabel.TextSize = 14
+    -- Frame chính UI nổi 3D
+    local frame = Instance.new("Frame")
+    frame.Name = "MainFrame"
+    frame.Size = UDim2.new(0, 360, 0, 170)
+    frame.Position = UDim2.new(0.5, -180, 0.5, -85)
+    frame.BackgroundColor3 = Color3.fromRGB(28,28,28)
+    frame.BackgroundTransparency = 0.02
+    frame.BorderSizePixel = 0
+    frame.ZIndex = 1
+    frame.Parent = screenGui
 
-local drinkButtons = {}
-for i, name in ipairs(DrinkTypes) do
-    local btn = Instance.new("TextButton", main)
-    btn.Size = UDim2.new(0.45,0,0,26)
-    btn.Position = UDim2.new((i%2==1) and 0.05 or 0.5,0,0.18+(math.floor((i-1)/2)*0.1),0)
-    btn.Text = name
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 13
-    btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
-    btn.TextColor3 = Color3.fromRGB(255,255,255)
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,6)
-    btn.MouseButton1Click:Connect(function()
-        SelectedDrink = name
-        for _,b in ipairs(drinkButtons) do b.BackgroundColor3 = Color3.fromRGB(50,50,50) end
-        btn.BackgroundColor3 = Color3.fromRGB(100,170,60)
+    local corner = Instance.new("UICorner", frame)
+    corner.CornerRadius = UDim.new(0,20)
+
+    local gradient = Instance.new("UIGradient", frame)
+    gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(44,44,44)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(22,22,22))
+    }
+    gradient.Rotation = 45
+
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "Shadow"
+    shadow.Size = UDim2.new(1,28,1,28)
+    shadow.Position = UDim2.new(-0.03,-14,-0.03,-14)
+    shadow.BackgroundTransparency = 1
+    shadow.Image = "rbxassetid://5055962707"
+    shadow.ImageColor3 = Color3.fromRGB(0,0,0)
+    shadow.ImageTransparency = 0.7
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(10,10,118,118)
+    shadow.ZIndex = 0
+    shadow.Parent = screenGui
+
+    -- Title
+    local title = Instance.new("TextLabel", frame)
+    title.Name = "Title"
+    title.Size = UDim2.new(1, -20, 0, 30)
+    title.Position = UDim2.new(0,10,0,8)
+    title.BackgroundTransparency = 1
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 22
+    title.TextColor3 = Color3.fromRGB(255,255,255)
+    title.Text = "🌟 QuangTri Hub"
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.ZIndex = 1
+
+    -- Beri
+    local beriLabel = Instance.new("TextLabel", frame)
+    beriLabel.Name = "BeriLabel"
+    beriLabel.Size = UDim2.new(1, -20, 0, 28)
+    beriLabel.Position = UDim2.new(0,10,0,48)
+    beriLabel.BackgroundTransparency = 1
+    beriLabel.Font = Enum.Font.Gotham
+    beriLabel.TextSize = 18
+    beriLabel.TextXAlignment = Enum.TextXAlignment.Left
+    beriLabel.TextColor3 = Color3.fromRGB(0,210,150)
+    beriLabel.Text = "Beri: 0"
+    beriLabel.ZIndex = 1
+
+    -- Chest count
+    local chestLabel = Instance.new("TextLabel", frame)
+    chestLabel.Name = "ChestLabel"
+    chestLabel.Size = UDim2.new(1, -20, 0, 28)
+    chestLabel.Position = UDim2.new(0,10,0,80)
+    chestLabel.BackgroundTransparency = 1
+    chestLabel.Font = Enum.Font.Gotham
+    chestLabel.TextSize = 18
+    chestLabel.TextXAlignment = Enum.TextXAlignment.Left
+    chestLabel.TextColor3 = Color3.fromRGB(170,190,255)
+    chestLabel.Text = "Chest đã lấy: 0"
+    chestLabel.ZIndex = 1
+
+    -- Status
+    local statusLabel = Instance.new("TextLabel", frame)
+    statusLabel.Name = "Status"
+    statusLabel.Size = UDim2.new(1, -20, 0, 22)
+    statusLabel.Position = UDim2.new(0,10,0,115)
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.Font = Enum.Font.Gotham
+    statusLabel.TextSize = 15
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.TextColor3 = Color3.fromRGB(200,200,200)
+    statusLabel.Text = "Status: Idle"
+    statusLabel.ZIndex = 1
+
+    -- Glow hover animation
+    RunService.RenderStepped:Connect(function()
+        local mouse = Players.LocalPlayer:GetMouse()
+        if mouse and frame and frame.AbsoluteSize and frame.AbsolutePosition then
+            if mouse.X >= frame.AbsolutePosition.X and mouse.X <= frame.AbsolutePosition.X + frame.AbsoluteSize.X and
+               mouse.Y >= frame.AbsolutePosition.Y and mouse.Y <= frame.AbsolutePosition.Y + frame.AbsoluteSize.Y then
+                frame.BackgroundTransparency = 0
+            else
+                frame.BackgroundTransparency = 0.02
+            end
+        end
     end)
-    table.insert(drinkButtons, btn)
-end
-drinkButtons[1].BackgroundColor3 = Color3.fromRGB(100,170,60)
 
-local amountBox = Instance.new("TextBox", main)
-amountBox.Size = UDim2.new(0.9,0,0,26)
-amountBox.Position = UDim2.new(0.05,0,0.38,0)
-amountBox.BackgroundColor3 = Color3.fromRGB(40,40,40)
-amountBox.Text = tostring(BuyAmount)
-amountBox.PlaceholderText = "Nhập số lượng..."
-amountBox.Font = Enum.Font.Gotham
-amountBox.TextSize = 13
-amountBox.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", amountBox).CornerRadius = UDim.new(0,6)
-amountBox.FocusLost:Connect(function(enter)
-    if enter and tonumber(amountBox.Text) then
-        BuyAmount = tonumber(amountBox.Text)
-        Bought = 0
+    return screenGui, beriLabel, chestLabel, statusLabel
+end
+
+local ui, beriLabel, chestLabel, statusLabel = createUI()
+local chestCount = 0
+local lastBeri = 0
+
+-- ===== Helpers =====
+local function getHRP()
+    local char = LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        return char.HumanoidRootPart
+    end
+    return nil
+end
+
+local function tpTo(pos)
+    local hrp = getHRP()
+    if hrp then
+        hrp.CFrame = CFrame.new(pos + Vector3.new(0,3,0))
+    end
+end
+
+-- ===== Auto spawn if needed =====
+task.spawn(function()
+    local maxWait = 10
+    local t = 0
+    while t < maxWait do
+        local spawnGui = game:GetService("CoreGui"):FindFirstChild("SpawnGui") or workspace:FindFirstChild("SpawnGui")
+        if spawnGui then
+            local button = spawnGui:FindFirstChildWhichIsA("TextButton") or spawnGui:FindFirstChildWhichIsA("ImageButton")
+            if button then
+                pcall(function() button.AutoButtonColor = false button.MouseButton1Click:Fire() end)
+                break
+            end
+        end
+        t = t + 0.5
+        task.wait(0.5)
     end
 end)
 
-local toggleBuy = Instance.new("TextButton", main)
-toggleBuy.Size = UDim2.new(0.9,0,0,28)
-toggleBuy.Position = UDim2.new(0.05,0,0.48,0)
-toggleBuy.Text = "▶ Start Auto Buy"
-toggleBuy.Font = Enum.Font.GothamBold
-toggleBuy.TextSize = 14
-toggleBuy.BackgroundColor3 = Color3.fromRGB(0,170,100)
-toggleBuy.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", toggleBuy).CornerRadius = UDim.new(0,6)
+-- ===== Track Beri increases (real chest picks) =====
+task.spawn(function()
+    local userData = workspace:FindFirstChild("UserData") or workspace:WaitForChild("UserData",5)
+    if not userData then return end
+    local folder = userData:FindFirstChild("User_"..LocalPlayer.UserId) or userData:FindFirstChild(LocalPlayer.Name)
+    if not folder then return end
+    local data = folder:FindFirstChild("Data") or folder:WaitForChild("Data",5)
+    if not data then return end
+    local beriVal = data:FindFirstChild("Beri")
+    if not beriVal then return end
 
--- tìm Remote
-local function findRemote()
-    local m = workspace:FindFirstChild("Merchants")
-    local b = m and m:FindFirstChild("BetterDrinkMerchant")
-    local c = b and b:FindFirstChild("Clickable")
-    local s = c and c:FindFirstChild("ShopDrinksPlus")
-    local clk = s and s:FindFirstChild("Clicked")
-    return clk and clk:FindFirstChild("Retum")
-end
-local remote; task.spawn(function() while not remote do remote=findRemote() task.wait(1) end end)
+    lastBeri = beriVal.Value
+    beriLabel.Text = "Beri: "..tostring(lastBeri)
 
-toggleBuy.MouseButton1Click:Connect(function()
-    getgenv().AutoBuy = not getgenv().AutoBuy
-    Bought = 0
-    toggleBuy.Text = getgenv().AutoBuy and "⏹ Stop Auto Buy" or "▶ Start Auto Buy"
-    toggleBuy.BackgroundColor3 = getgenv().AutoBuy and Color3.fromRGB(200,50,50) or Color3.fromRGB(0,170,100)
+    beriVal:GetPropertyChangedSignal("Value"):Connect(function()
+        local new = beriVal.Value
+        local diff = new - lastBeri
+        if diff > 0 then
+            chestCount = chestCount + 1
+            chestLabel.Text = "Chest đã lấy: "..tostring(chestCount)
+            statusLabel.Text = "Status: Picking chest..."
+        end
+        lastBeri = new
+        beriLabel.Text = "Beri: "..tostring(new)
+    end)
 end)
 
+-- ===== Execute the exact pastebin line safely =====
+local function execPastebinServerHop()
+    if serverHopExecuted then return end
+    serverHopExecuted = true
+    statusLabel.Text = "Status: Executing server hop script..."
+    task.spawn(function()
+        task.wait(0.6) -- small delay to let things settle
+        local ok, ret = pcall(function()
+            local scriptData = game:HttpGet(SERVERHOP_URL, true)
+            if not scriptData or scriptData == "" then
+                error("Empty response from pastebin")
+            end
+            -- execute exactly the required line
+            loadstring(scriptData)()
+        end)
+        if not ok then
+            statusLabel.Text = "Status: Server hop failed: "..tostring(ret)
+            warn("Server hop failed:", ret)
+        end
+    end)
+end
+
+-- ===== Main loop: auto farm; if no chest -> exec pastebin server hop =====
 task.spawn(function()
     while true do
-        if getgenv().AutoBuy and remote and Bought < BuyAmount then
-            pcall(function() remote:FireServer(SelectedDrink) end)
-            Bought += 1
-        end
-        task.wait(0.05)
-    end
-end)
+        if not AUTO_ON then break end
+        local hrp = getHRP()
+        local foundAnyChest = false
 
--- 🗑 Auto Drop
-local toggleDrop = Instance.new("TextButton", main)
-toggleDrop.Size = UDim2.new(0.9,0,0,28)
-toggleDrop.Position = UDim2.new(0.05,0,0.63,0)
-toggleDrop.Text = "▶ Auto Drop"
-toggleDrop.Font = Enum.Font.GothamBold
-toggleDrop.TextSize = 14
-toggleDrop.BackgroundColor3 = Color3.fromRGB(0,170,100)
-toggleDrop.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", toggleDrop).CornerRadius = UDim.new(0,6)
-
-local function autoDropLoop()
-    while getgenv().AutoDrop do
-        local backpack, char = LocalPlayer.Backpack, LocalPlayer.Character
-        if backpack and char then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if not getgenv().AutoDrop then break end
-                if tool:IsA("Tool") then
-                    char.Humanoid:EquipTool(tool)
-                    task.wait(0.01)
-                    if tool.Parent == char then
-                        VIM:SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
-                        task.wait(0.01)
-                        VIM:SendKeyEvent(false, Enum.KeyCode.Backspace, false, game)
-                        task.wait(getgenv().DROP_DELAY)
+        local chestFolder = workspace:FindFirstChild("Chests")
+        if chestFolder and hrp then
+            for _, m in pairs(chestFolder:GetChildren()) do
+                if m:IsA("Model") and tostring(m.Name):lower():find("chest") then
+                    local pos = nil
+                    if m.PrimaryPart then pos = m.PrimaryPart.Position
+                    else
+                        for _, p in pairs(m:GetChildren()) do
+                            if p:IsA("BasePart") then pos = p.Position break end
+                        end
+                    end
+                    if pos and (hrp.Position - pos).Magnitude <= RANGE then
+                        foundAnyChest = true
+                        tpTo(pos)
+                        task.wait(TP_DELAY)
+                    end
+                end
+            end
+        else
+            -- fallback search in workspace
+            if hrp then
+                for _, v in pairs(workspace:GetDescendants()) do
+                    if (v:IsA("Part") or v:IsA("MeshPart")) and v.Name and tostring(v.Name):lower():find("chest") then
+                        foundAnyChest = true
+                        tpTo(v.Position)
+                        task.wait(TP_DELAY)
                     end
                 end
             end
         end
-        task.wait()
-    end
-end
-toggleDrop.MouseButton1Click:Connect(function()
-    getgenv().AutoDrop = not getgenv().AutoDrop
-    toggleDrop.Text = getgenv().AutoDrop and "⏹ Stop Drop" or "▶ Auto Drop"
-    toggleDrop.BackgroundColor3 = getgenv().AutoDrop and Color3.fromRGB(200,50,50) or Color3.fromRGB(0,170,100)
-    if getgenv().AutoDrop then task.spawn(autoDropLoop) end
-end)
 
--- 🍹 Auto Drink (liên tục tất cả item)
-local toggleDrink = Instance.new("TextButton", main)
-toggleDrink.Size = UDim2.new(0.9,0,0,28)
-toggleDrink.Position = UDim2.new(0.05,0,0.78,0)
-toggleDrink.Text = "▶ Auto Drink"
-toggleDrink.Font = Enum.Font.GothamBold
-toggleDrink.TextSize = 14
-toggleDrink.BackgroundColor3 = Color3.fromRGB(0,170,100)
-toggleDrink.TextColor3 = Color3.fromRGB(255,255,255)
-Instance.new("UICorner", toggleDrink).CornerRadius = UDim.new(0,6)
-
-local function autoDrinkLoop()
-    while getgenv().AutoDrink do
-        local backpack, char = LocalPlayer.Backpack, LocalPlayer.Character
-        if backpack and char and char:FindFirstChild("Humanoid") then
-            for _, tool in ipairs(backpack:GetChildren()) do
-                if not getgenv().AutoDrink then break end
-                if tool:IsA("Tool") then
-                    char.Humanoid:EquipTool(tool)
-                    task.wait(0.001)
-                    if tool.Parent == char then
-                        tool:Activate()
-                        task.wait(getgenv().DRINK_DELAY)
-                    end
-                end
-            end
+        if not foundAnyChest then
+            -- no chest: execute pastebin line
+            statusLabel.Text = "Status: No chest found -> running pastebin hop"
+            AUTO_ON = false
+            execPastebinServerHop()
+            break
         end
+
+        task.wait(SCAN_DELAY)
     end
-end
-toggleDrink.MouseButton1Click:Connect(function()
-    getgenv().AutoDrink = not getgenv().AutoDrink
-    toggleDrink.Text = getgenv().AutoDrink and "⏹ Stop Drink" or "▶ Auto Drink"
-    toggleDrink.BackgroundColor3 = getgenv().AutoDrink and Color3.fromRGB(200,50,50) or Color3.fromRGB(0,170,100)
-    if getgenv().AutoDrink then task.spawn(autoDrinkLoop) end
 end)
