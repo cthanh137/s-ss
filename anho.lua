@@ -1,1 +1,1 @@
-print("activecc")
+print("active")
