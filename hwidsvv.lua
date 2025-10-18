@@ -1,1 +1,1 @@
-print("Delta")
+print("Deltas")
