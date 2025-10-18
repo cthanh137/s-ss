@@ -1,7 +1,7 @@
 
 print("d95128fe-1863-11ea-84cc-806e6f6e6963")
 print("255708e6-d0c9-11ef-a3cc-806e6f6e6963")
-print("Delta")
+print("")
 print("")
 print("")
 print("")
