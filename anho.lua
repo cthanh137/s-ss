@@ -1,1 +1,1 @@
-print("activee")
+print("active")
