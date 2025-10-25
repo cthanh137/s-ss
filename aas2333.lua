@@ -46,9 +46,51 @@ local Themes = {
 		"Cloud",
 		"Grape",
 		"Bloody",
-		"Arctic"
+		"Arctic",
+		"Aurora"
 
 	},
+	Aurora = {
+	Name = "Aurora",
+	Accent = Color3.fromRGB(105, 180, 255), -- điểm nhấn xanh dương sáng
+	AcrylicMain = Color3.fromRGB(30, 25, 45), -- nền tím đậm
+	AcrylicBorder = Color3.fromRGB(75, 55, 110), -- viền tím nhạt
+	AcrylicGradient = ColorSequence.new(
+		Color3.fromRGB(25, 20, 35), 
+		Color3.fromRGB(45, 35, 75)
+	),
+	AcrylicNoise = 0.85,
+	TitleBarLine = Color3.fromRGB(120, 80, 180),
+	Tab = Color3.fromRGB(90, 60, 160),
+	Element = Color3.fromRGB(75, 55, 140),
+	ElementBorder = Color3.fromRGB(40, 30, 75),
+	InElementBorder = Color3.fromRGB(115, 85, 190),
+	ElementTransparency = 0.85,
+	ToggleSlider = Color3.fromRGB(125, 85, 210),
+	ToggleToggled = Color3.fromRGB(55, 35, 95),
+	SliderRail = Color3.fromRGB(120, 80, 180),
+	DropdownFrame = Color3.fromRGB(135, 95, 200),
+	DropdownHolder = Color3.fromRGB(45, 35, 75),
+	DropdownBorder = Color3.fromRGB(65, 45, 100),
+	DropdownOption = Color3.fromRGB(115, 85, 190),
+	Keybind = Color3.fromRGB(125, 85, 210),
+	Input = Color3.fromRGB(135, 95, 200),
+	InputFocused = Color3.fromRGB(25, 20, 40),
+	InputIndicator = Color3.fromRGB(170, 120, 255),
+	InputIndicatorFocus = Color3.fromRGB(105, 180, 255),
+	Dialog = Color3.fromRGB(50, 40, 85),
+	DialogHolder = Color3.fromRGB(35, 30, 70),
+	DialogHolderLine = Color3.fromRGB(25, 20, 60),
+	DialogButton = Color3.fromRGB(55, 40, 90),
+	DialogButtonBorder = Color3.fromRGB(95, 70, 150),
+	DialogBorder = Color3.fromRGB(90, 60, 140),
+	DialogInput = Color3.fromRGB(60, 45, 95),
+	DialogInputLine = Color3.fromRGB(155, 105, 230),
+	Text = Color3.fromRGB(255, 255, 255),
+	SubText = Color3.fromRGB(185, 185, 200),
+	Hover = Color3.fromRGB(125, 95, 210),
+	HoverChange = 0.06,
+},
 	Dark = {
 		Name = "Dark",
 		Accent = Color3.fromRGB(96, 205, 255),
