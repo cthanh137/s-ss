@@ -145,7 +145,7 @@ local Themes = {
 		Text = Color3.fromRGB(255, 255, 255),
 		SubText = Color3.fromRGB(170, 170, 170),
 		Hover = Color3.fromRGB(40, 40, 40),
-		HoverChange = 0.04
+		HoverChange = 0.04,
 	},
 	Oceanic = {
 	Name = "Rabbit Color",
