@@ -3255,46 +3255,55 @@ corner.Parent = TopImage
 
 		Window.ShowSearch = (Config.Search == nil) and true or (Config.Search and true or false)
 
-		local SearchFrame = New("Frame", {
-			Size = UDim2.new(1, 0, 0, 35),
-			Position = UDim2.new(0, 0, 0, 0),
-			BackgroundTransparency = 0.9,
-			ZIndex = 10,
-			Visible = Window.ShowSearch,
-			ThemeTag = {
-				BackgroundColor3 = "Element",
-			},
-		}, {
-			New("UICorner", {
-				CornerRadius = UDim.new(0, 6),
-			}),
-			New("UIStroke", {
-				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-				Transparency = 0.8,
-				Thickness = 1,
-				ThemeTag = {
-					Color = "ElementBorder",
-				},
-			}),
-		})
+	-- Tạo SearchFrame
+local SearchFrame = New("Frame", {
+    Size = UDim2.new(1, 0, 0, 35),
+    Position = UDim2.new(0, 0, 0, 0),
+    BackgroundTransparency = 0.9,
+    ZIndex = 10,
+    Visible = Window.ShowSearch,
+    ThemeTag = {
+        BackgroundColor3 = "Element",
+    },
+}, {
+    New("UICorner", {
+        CornerRadius = UDim.new(0, 6),
+    }),
+    New("UIStroke", {
+        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+        Transparency = 0.8,
+        Thickness = 1,
+        ThemeTag = {
+            Color = "ElementBorder",
+        },
+    }),
+})
 
-		local SearchTextbox = Components.Textbox(SearchFrame, true)
-		SearchTextbox.Frame.Size = UDim2.new(1, -44, 1, -8)
-		SearchTextbox.Frame.Position = UDim2.new(0, 10, 0, 4)
-		SearchTextbox.Input.PlaceholderText = "Search..."
-		SearchTextbox.Input.Text = ""
+-- Tạo SearchTextbox
+local SearchTextbox = Components.Textbox(SearchFrame, true)
+SearchTextbox.Frame.Size = UDim2.new(1, -44, 1, -8)
+SearchTextbox.Frame.Position = UDim2.new(0, 10, 0, 4)
+SearchTextbox.Input.PlaceholderText = "Search..."
+SearchTextbox.Input.Text = ""
 
-		local SearchIcon = New("ImageLabel", {
-			Size = UDim2.fromOffset(18, 18),
-			Position = UDim2.new(1, -18, 0.5, 0),
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundTransparency = 1,
-			Image = "rbxassetid://10734943674",
-			Parent = SearchFrame,
-			ThemeTag = {
-				ImageColor3 = "SubText",
-			},
-		})
+-- ID model Harmless Rabbit
+local ASSET_ID =686452506
+local thumbnailURL = "https://www.roblox.com/asset-thumbnail/image?assetId="..ASSET_ID.."&width=420&height=420&format=png"
+
+-- Tạo ImageLabel hiển thị thumbnail trong SearchFrame
+local SearchIcon = New("ImageLabel", {
+    Size = UDim2.fromOffset(24, 24),      -- tăng kích thước icon
+    Position = UDim2.new(1, -20, 0.5, 0), -- canh bên phải
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    BackgroundTransparency = 1,
+    Image = thumbnailURL,                  -- gắn thumbnail thay vì asset cũ
+    Parent = SearchFrame,
+    ScaleType = Enum.ScaleType.Fit,
+    ThemeTag = {
+        ImageColor3 = "SubText",
+    },
+})
+
 
 
 		Creator.AddSignal(SearchTextbox.Input:GetPropertyChangedSignal("Text"), function()
@@ -6365,7 +6374,7 @@ local Icons = {
 	["lucide-redo-2"] = "rbxassetid://10734932586",
 	["lucide-refresh-ccw"] = "rbxassetid://10734933056",
 	["lucide-refresh-cw"] = "rbxassetid://10734933222",
-	["lucide-refrigerator"] = "rbxassetid://10734933465",
+			["lucide-refrigerator"] = "rbxassetid://10734933465",
 	["lucide-regex"] = "rbxassetid://10734933655",
 	["lucide-repeat"] = "rbxassetid://10734933966",
 	["lucide-repeat-1"] = "rbxassetid://10734933826",
