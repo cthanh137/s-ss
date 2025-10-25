@@ -3160,11 +3160,11 @@ Components.Window = (function()
 		end
 		Window.TabWidth = Config.TabWidth
 
-		local Selector = New("Frame", {
-	Size = UDim2.fromOffset(0, 4), -- 🔹 Đổi từ dọc sang ngang (chiều rộng = động)
+	local Selector = New("Frame", {
+	Size = UDim2.fromOffset(4, 0),
 	BackgroundColor3 = Color3.fromRGB(76, 194, 255),
-	Position = UDim2.fromOffset((Window.TabHolderLeft or 45) + 0, 0), -- 🔹 Tính vị trí ngang
-	AnchorPoint = Vector2.new(0.5, 0),
+	Position = UDim2.fromOffset(0, (Window.TabHolderTop or 45) + 0),
+	AnchorPoint = Vector2.new(0, 0.5),
 	ThemeTag = {
 		BackgroundColor3 = "Accent",
 	},
@@ -3180,7 +3180,7 @@ local ResizeStartFrame = New("Frame", {
 	Position = UDim2.new(1, -20, 1, -2),
 })
 
--- 🧩 TabHolder NẰM NGANG
+-- 🧩 TabHolder (chứa các tab)
 Window.TabHolder = New("ScrollingFrame", {
 	Size = UDim2.new(1, 0, 1, -45),
 	Position = UDim2.new(0, 0, 0, 45),
@@ -3189,16 +3189,27 @@ Window.TabHolder = New("ScrollingFrame", {
 	ScrollBarThickness = 0,
 	BorderSizePixel = 0,
 	CanvasSize = UDim2.fromScale(0, 0),
-	ScrollingDirection = Enum.ScrollingDirection.X, -- 🔹 CHUYỂN THÀNH NGANG
+	ScrollingDirection = Enum.ScrollingDirection.Y,
 }, {
 	New("UIListLayout", {
-		FillDirection = Enum.FillDirection.Horizontal, -- 🔹 Sắp xếp các tab theo hàng ngang
-		Padding = UDim.new(0, 6), -- 🔹 Khoảng cách giữa tab
-		HorizontalAlignment = Enum.HorizontalAlignment.Left, -- 🔹 Căn trái
-		VerticalAlignment = Enum.VerticalAlignment.Top, -- 🔹 Canh trên
+		Padding = UDim.new(0, 4),
 	}),
 })
 
+-- 🖼️ Thêm ảnh nằm trên cùng của tab
+local TopImage = Instance.new("ImageLabel")
+TopImage.Name = "TabTopImage"
+TopImage.Image = "rbxassetid://6889812791" -- 🔹 ID ảnh của bạn
+TopImage.Size = UDim2.new(0, 60, 0, 60) -- 🔹 Kích thước ảnh
+TopImage.Position = UDim2.new(0, 10, 0, -65) -- 🔹 Nằm phía trên tab
+TopImage.BackgroundTransparency = 1
+TopImage.AnchorPoint = Vector2.new(0, 0)
+TopImage.Parent = Window.TabHolder
+
+-- Bo góc nhẹ cho ảnh (tùy chọn)
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = TopImage
 
 
 		local SearchElements = {}
