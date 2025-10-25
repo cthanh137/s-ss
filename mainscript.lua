@@ -7569,6 +7569,97 @@ AnimateProperty(imageLabel, "ImageTransparency", 1, 0, 1)
 TweenService:Create(imageLabel, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 	Position = startPos
 }):Play()
+-- 🟣 Nút di chuyển bật/tắt Minimize (tương thích FluentPlus Beta.lua)
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+-- ⚙️ Tạo button chính
+local MinimizeButton = Instance.new("Frame")
+MinimizeButton.Name = "MiniButton"
+MinimizeButton.Parent = game.CoreGui:FindFirstChild("FluentPlus") or Library.gui or Library.Container
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(126, 44, 182)
+MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
+MinimizeButton.Position = UDim2.new(0, 100, 0, 100)
+MinimizeButton.Active = true
+MinimizeButton.Draggable = true
+MinimizeButton.BorderSizePixel = 0
+MinimizeButton.ZIndex = 999
+
+-- 🟪 Làm bo tròn / hoặc vuông tùy chọn
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(1, 0) -- bo tròn hoàn toàn
+corner.Parent = MinimizeButton
+
+-- 🕹️ Icon bên trong
+local icon = Instance.new("ImageLabel")
+icon.Name = "Icon"
+icon.Parent = MinimizeButton
+icon.BackgroundTransparency = 1
+icon.AnchorPoint = Vector2.new(0.5, 0.5)
+icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+icon.Size = UDim2.new(0.6, 0, 0.6, 0)
+icon.Image = "rbxassetid://6035067836" -- icon minimize (thay tùy thích)
+icon.ImageTransparency = 0.2
+
+-- 🎨 Hover hiệu ứng
+local function HoverEffect(hovering)
+	TweenService:Create(MinimizeButton, TweenInfo.new(0.25), {
+		BackgroundColor3 = hovering and Color3.fromRGB(160, 75, 210) or Color3.fromRGB(126, 44, 182)
+	}):Play()
+end
+
+MinimizeButton.MouseEnter:Connect(function() HoverEffect(true) end)
+MinimizeButton.MouseLeave:Connect(function() HoverEffect(false) end)
+
+-- 🔘 Sự kiện click: bật / tắt minimize
+local isMinimized = false
+MinimizeButton.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		isMinimized = not isMinimized
+		if Library and Library.Minimize then
+			Library.Minimize(isMinimized)
+		end
+
+		-- 🔄 Đổi icon để báo trạng thái
+		TweenService:Create(icon, TweenInfo.new(0.25), {
+			ImageTransparency = isMinimized and 0.6 or 0.2
+		}):Play()
+	end
+end)
+
+-- 🧭 Kéo di chuyển
+local dragging, dragInput, dragStart, startPos
+MinimizeButton.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = MinimizeButton.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+MinimizeButton.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		MinimizeButton.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
 task.wait(0.01)
 
 return Library, SaveManager, InterfaceManager, Mobile
