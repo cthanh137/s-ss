@@ -7548,7 +7548,7 @@ end)
 	-- 🟣 Nút bấm tròn
 	local Button = Instance.new("TextButton")
 	Button.Name = "FloatingMinimizeButton"
-	Button.Size = UDim2.new(0, 50, 0,5	0)
+	Button.Size = UDim2.new(0, 50, 0,50)
 Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
 	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
 	Button.Text = "Hide Menu"
