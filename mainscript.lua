@@ -1,3 +1,26 @@
+-- CHÈN ĐOẠN NÀY VÀO SAU KHI GUI HOẶC MAIN FRAME ĐƯỢC TẠO
+-- Thay "MainMenuFrame" bằng đường dẫn tới Frame của menu bạn đang dùng (ví dụ: screenGui.MainFrame)
+local parentFrame = script.Parent:FindFirstChild("Main") or script.Parent:FindFirstChild("MainFrame") or workspace:FindFirstChild("MainUI") 
+-- nếu parentFrame nil thì thay bằng đúng path tới frame UI của bạn
+
+if parentFrame then
+    local headerImage = Instance.new("ImageLabel")
+    headerImage.Name = "HeaderLogo"
+    headerImage.Size = UDim2.new(0, 64, 0, 64)         -- kích thước, chỉnh theo UI bạn muốn
+    headerImage.Position = UDim2.new(0, 12, 0, 12)     -- canh vào góc trái trên, tùy chỉnh
+    headerImage.BackgroundTransparency = 1
+    headerImage.Image = "rbxassetid://71032940037927"   -- <-- thay bằng asset id của bạn
+    headerImage.ScaleType = Enum.ScaleType.Fit
+    headerImage.ZIndex = parentFrame.ZIndex + 5
+    headerImage.Parent = parentFrame
+
+    -- (tùy chọn) bo góc
+    local uicorner = Instance.new("UICorner")
+    uicorner.CornerRadius = UDim.new(0, 8)
+    uicorner.Parent = headerImage
+else
+    warn("Không tìm thấy parentFrame để chèn HeaderLogo. Hãy sửa đường dẫn tới frame UI.")
+end
 
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
@@ -3056,17 +3079,17 @@ Components.TitleBar = (function()
 		})
 		TitleBar.CloseButton = BarButton(Components.Assets.Close, UDim2.new(1, -4, 0, 4), TitleBar.Frame, function()
 			Library.Window:Dialog({
-				Title = "Close",
-				Content = "Are you sure you want to unload the interface?",
+				Title = "Phần mềm thoát",
+				Content = "Bạn có muốn tắt phần mềm",
 				Buttons = {
 					{
-						Title = "Yes",
+						Title = "Có",
 						Callback = function()
 							Library:Destroy()
 						end,
 					},
 					{
-						Title = "No",
+						Title = "Không",
 					},
 				},
 			})
