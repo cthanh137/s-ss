@@ -3197,14 +3197,24 @@ Window.TabHolder = New("ScrollingFrame", {
 })
 
 -- 🖼️ Thêm ảnh nằm trên cùng của tab
+local ASSET_ID = 686452506
+local thumbnailURL = "https://www.roblox.com/asset-thumbnail/image?assetId="..ASSET_ID.."&width=420&height=420&format=png"
+
+-- Tạo ImageLabel trên Tab
 local TopImage = Instance.new("ImageLabel")
 TopImage.Name = "TabTopImage"
-TopImage.Image = "rbxassetid://2866390641" -- 🔹 ID ảnh của bạn
-TopImage.Size = UDim2.new(0, 120, 0, 120) -- 🔹 Kích thước ảnh
-TopImage.Position = UDim2.new(0, 35, 0, -65) -- 🔹 Nằm phía trên tab
+TopImage.Image = thumbnailURL          -- 🔹 dùng thumbnail thay cho asset cũ
+TopImage.Size = UDim2.new(0, 120, 0, 120) -- 🔹 kích thước ảnh
+TopImage.Position = UDim2.new(0, 35, 0, -65) -- 🔹 nằm phía trên tab
 TopImage.BackgroundTransparency = 1
 TopImage.AnchorPoint = Vector2.new(0, 0)
 TopImage.Parent = Window.TabHolder
+TopImage.ScaleType = Enum.ScaleType.Fit    -- giữ tỉ lệ ảnh
+
+-- Bo góc nhẹ cho ảnh (tùy chọn)
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = TopImage
 
 -- Bo góc nhẹ cho ảnh (tùy chọn)
 local corner = Instance.new("UICorner")
@@ -3256,54 +3266,7 @@ corner.Parent = TopImage
 		Window.ShowSearch = (Config.Search == nil) and true or (Config.Search and true or false)
 
 	-- Tạo SearchFrame
-local SearchFrame = New("Frame", {
-    Size = UDim2.new(1, 0, 0, 35),
-    Position = UDim2.new(0, 0, 0, 0),
-    BackgroundTransparency = 0.9,
-    ZIndex = 10,
-    Visible = Window.ShowSearch,
-    ThemeTag = {
-        BackgroundColor3 = "Element",
-    },
-}, {
-    New("UICorner", {
-        CornerRadius = UDim.new(0, 6),
-    }),
-    New("UIStroke", {
-        ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-        Transparency = 0.8,
-        Thickness = 1,
-        ThemeTag = {
-            Color = "ElementBorder",
-        },
-    }),
-})
-
--- Tạo SearchTextbox
-local SearchTextbox = Components.Textbox(SearchFrame, true)
-SearchTextbox.Frame.Size = UDim2.new(1, -44, 1, -8)
-SearchTextbox.Frame.Position = UDim2.new(0, 10, 0, 4)
-SearchTextbox.Input.PlaceholderText = "Search..."
-SearchTextbox.Input.Text = ""
-
--- ID model Harmless Rabbit
-local ASSET_ID =686452506
-local thumbnailURL = "https://www.roblox.com/asset-thumbnail/image?assetId="..ASSET_ID.."&width=420&height=420&format=png"
-
--- Tạo ImageLabel hiển thị thumbnail trong SearchFrame
-local SearchIcon = New("ImageLabel", {
-    Size = UDim2.fromOffset(24, 24),      -- tăng kích thước icon
-    Position = UDim2.new(1, -20, 0.5, 0), -- canh bên phải
-    AnchorPoint = Vector2.new(0.5, 0.5),
-    BackgroundTransparency = 1,
-    Image = thumbnailURL,                  -- gắn thumbnail thay vì asset cũ
-    Parent = SearchFrame,
-    ScaleType = Enum.ScaleType.Fit,
-    ThemeTag = {
-        ImageColor3 = "SubText",
-    },
-})
-
+local SearchFrame = New("Frame", { Size = UDim2.new(1, 0, 0, 35), Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 0.9, ZIndex = 10, Visible = Window.ShowSearch, ThemeTag = { BackgroundColor3 = "Element", }, }, { New("UICorner", { CornerRadius = UDim.new(0, 6), }), New("UIStroke", { ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Transparency = 0.8, Thickness = 1, ThemeTag = { Color = "ElementBorder", }, }), }) local SearchTextbox = Components.Textbox(SearchFrame, true) SearchTextbox.Frame.Size = UDim2.new(1, -44, 1, -8) SearchTextbox.Frame.Position = UDim2.new(0, 10, 0, 4) SearchTextbox.Input.PlaceholderText = "Search..." SearchTextbox.Input.Text = "" local SearchIcon = New("ImageLabel", { Size = UDim2.fromOffset(18, 18), Position = UDim2.new(1, -18, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = "rbxassetid://10734943674", Parent = SearchFrame, ThemeTag = { ImageColor3 = "SubText", }, })
 
 
 		Creator.AddSignal(SearchTextbox.Input:GetPropertyChangedSignal("Text"), function()
