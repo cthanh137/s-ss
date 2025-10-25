@@ -1,26 +1,4 @@
--- CHÈN ĐOẠN NÀY VÀO SAU KHI GUI HOẶC MAIN FRAME ĐƯỢC TẠO
--- Thay "MainMenuFrame" bằng đường dẫn tới Frame của menu bạn đang dùng (ví dụ: screenGui.MainFrame)
-local parentFrame = script.Parent:FindFirstChild("Main") or script.Parent:FindFirstChild("MainFrame") or workspace:FindFirstChild("MainUI") 
--- nếu parentFrame nil thì thay bằng đúng path tới frame UI của bạn
 
-if parentFrame then
-    local headerImage = Instance.new("ImageLabel")
-    headerImage.Name = "HeaderLogo"
-    headerImage.Size = UDim2.new(0, 64, 0, 64)         -- kích thước, chỉnh theo UI bạn muốn
-    headerImage.Position = UDim2.new(0, 12, 0, 12)     -- canh vào góc trái trên, tùy chỉnh
-    headerImage.BackgroundTransparency = 1
-    headerImage.Image = "rbxassetid://71032940037927"   -- <-- thay bằng asset id của bạn
-    headerImage.ScaleType = Enum.ScaleType.Fit
-    headerImage.ZIndex = parentFrame.ZIndex + 5
-    headerImage.Parent = parentFrame
-
-    -- (tùy chọn) bo góc
-    local uicorner = Instance.new("UICorner")
-    uicorner.CornerRadius = UDim.new(0, 8)
-    uicorner.Parent = headerImage
-else
-    warn("Không tìm thấy parentFrame để chèn HeaderLogo. Hãy sửa đường dẫn tới frame UI.")
-end
 
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
@@ -168,6 +146,44 @@ local Themes = {
 		Hover = Color3.fromRGB(40, 40, 40),
 		HoverChange = 0.04
 	},
+	Oceanic = {
+	Name = "Rabbit Color",
+	Accent = Color3.fromRGB(0, 174, 255),
+	AcrylicMain = Color3.fromRGB(8, 25, 48),
+	AcrylicBorder = Color3.fromRGB(24, 78, 119),
+	AcrylicGradient = ColorSequence.new(Color3.fromRGB(10, 35, 60), Color3.fromRGB(20, 50, 80)),
+	AcrylicNoise = 0.85,
+	TitleBarLine = Color3.fromRGB(0, 132, 200),
+	Tab = Color3.fromRGB(0, 160, 230),
+	Element = Color3.fromRGB(0, 140, 210),
+	ElementBorder = Color3.fromRGB(0, 80, 130),
+	InElementBorder = Color3.fromRGB(0, 105, 160),
+	ElementTransparency = 0.84,
+	ToggleSlider = Color3.fromRGB(0, 165, 240),
+	ToggleToggled = Color3.fromRGB(15, 45, 70),
+	SliderRail = Color3.fromRGB(0, 165, 240),
+	DropdownFrame = Color3.fromRGB(0, 155, 230),
+	DropdownHolder = Color3.fromRGB(10, 35, 60),
+	DropdownBorder = Color3.fromRGB(0, 85, 130),
+	DropdownOption = Color3.fromRGB(0, 145, 210),
+	Keybind = Color3.fromRGB(0, 145, 210),
+	Input = Color3.fromRGB(0, 135, 200),
+	InputFocused = Color3.fromRGB(5, 25, 45),
+	InputIndicator = Color3.fromRGB(0, 185, 255),
+	InputIndicatorFocus = Color3.fromRGB(0, 174, 255),
+	Dialog = Color3.fromRGB(10, 35, 60),
+	DialogHolder = Color3.fromRGB(8, 28, 52),
+	DialogHolderLine = Color3.fromRGB(6, 20, 40),
+	DialogButton = Color3.fromRGB(10, 35, 60),
+	DialogButtonBorder = Color3.fromRGB(0, 105, 160),
+	DialogBorder = Color3.fromRGB(0, 95, 150),
+	DialogInput = Color3.fromRGB(10, 40, 70),
+	DialogInputLine = Color3.fromRGB(0, 165, 240),
+	Text = Color3.fromRGB(235, 245, 255),
+	SubText = Color3.fromRGB(160, 180, 200),
+	Hover = Color3.fromRGB(0, 180, 255),
+	HoverChange = 0.05
+}
 	Light = {
 		Name = "Light",
 		Accent = Color3.fromRGB(0, 103, 192),
