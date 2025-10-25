@@ -44,7 +44,8 @@ local Themes = {
 		"Cloud",
 		"Grape",
 		"Bloody",
-		"Arctic"
+		"Arctic",
+		"Oceanic"
 	},
 	Dark = {
 		Name = "Dark",
