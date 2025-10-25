@@ -7509,30 +7509,7 @@ local function AnimateProperty(object, property, startValue, endValue, duration)
 	end)
 end
 
--- 🖼️ Thêm ImageLabel vào GUI
-local imageId = 18465920768 -- 🟣 Thay ID này = rbxassetid ảnh bạn upload
-local parentGui = script.Parent:FindFirstChild("MainFrame") or script.Parent
 
-local imageLabel = Instance.new("ImageLabel")
-imageLabel.Name = "FluentImage"
-imageLabel.Image = "rbxassetid://4805639000" .. imageId
-imageLabel.BackgroundTransparency = 1
-imageLabel.ImageTransparency = 1 -- bắt đầu ẩn
-imageLabel.Size = UDim2.new(0, 90, 0, 90)
-imageLabel.Position = UDim2.new(0, 10, 0, 10) -- góc trái trên
-imageLabel.ZIndex = 999
-imageLabel.Parent = parentGui
-
--- 🎬 Hiệu ứng xuất hiện: fade-in + trượt nhẹ
-task.wait(0.3)
-local TweenService = game:GetService("TweenService")
-local startPos = imageLabel.Position
-imageLabel.Position = startPos - UDim2.new(0, 0, 0, 20)
-
-AnimateProperty(imageLabel, "ImageTransparency", 1, 0, 1)
-TweenService:Create(imageLabel, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-	Position = startPos
-}):Play()
 -- 🟣 Nút di chuyển bật/tắt Minimize (tương thích FluentPlus Beta.lua)
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
