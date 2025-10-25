@@ -7509,33 +7509,52 @@ local function AnimateProperty(object, property, startValue, endValue, duration)
 	end)
 end
 
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Name = "MinimizeButton"
-MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
-MinimizeButton.Position = UDim2.new(0.5, -20, 0.5, -20) -- Giữa màn hình
-MinimizeButton.AnchorPoint = Vector2.new(0, 0)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-MinimizeButton.Text = "-"
-MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeButton.TextScaled = true
-MinimizeButton.Draggable = true
-MinimizeButton.Active = true
-MinimizeButton.Parent = Library.ScreenGui or game:GetService("CoreGui")
 
--- Bo góc tròn
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(1, 0)
-UICorner.Parent = MinimizeButton
 
--- 🟢 Gọi hàm minimize có sẵn trong library
-MinimizeButton.MouseButton1Click:Connect(function()
-	if Library and Library.Minimize then
-		Library.Minimize() -- gọi trực tiếp hàm minimize có sẵn
-	else
-		warn("⚠️ Library.Minimize() không tồn tại hoặc chưa được khởi tạo.")
-	end
+task.defer(function()
+	repeat task.wait() until Library and Library.Minimize and game:GetService("CoreGui")
+
+	-- 🟣 Tạo GUI Container nếu chưa có
+	local ScreenGui = Library.ScreenGui or Instance.new("ScreenGui", game:GetService("CoreGui"))
+	ScreenGui.Name = "FluentPlus_MinimizeGUI"
+	ScreenGui.IgnoreGuiInset = true
+	ScreenGui.ResetOnSpawn = false
+
+	-- 🟢 Nút tròn giữa màn hình
+	local MinimizeButton = Instance.new("TextButton")
+	MinimizeButton.Name = "MinimizeButton"
+	MinimizeButton.Size = UDim2.new(0, 46, 0, 46)
+	MinimizeButton.Position = UDim2.new(0.5, -23, 0.5, -23) -- Giữa màn hình
+	MinimizeButton.BackgroundColor3 = Color3.fromRGB(95, 65, 165)
+	MinimizeButton.Text = "-"
+	MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	MinimizeButton.TextScaled = true
+	MinimizeButton.Font = Enum.Font.GothamBold
+	MinimizeButton.Parent = ScreenGui
+	MinimizeButton.Active = true
+	MinimizeButton.Draggable = true
+
+	-- Bo tròn
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(1, 0)
+	UICorner.Parent = MinimizeButton
+
+	-- Hiệu ứng hover
+	local TweenService = game:GetService("TweenService")
+	MinimizeButton.MouseEnter:Connect(function()
+		TweenService:Create(MinimizeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(125, 85, 205)}):Play()
+	end)
+	MinimizeButton.MouseLeave:Connect(function()
+		TweenService:Create(MinimizeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(95, 65, 165)}):Play()
+	end)
+
+	-- Gọi hàm minimize gốc
+	MinimizeButton.MouseButton1Click:Connect(function()
+		pcall(function()
+			Library.Minimize()
+		end)
+	end)
 end)
-
 
 
 task.wait(0.01)
