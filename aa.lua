@@ -7509,60 +7509,32 @@ local function AnimateProperty(object, property, startValue, endValue, duration)
 	end)
 end
 
--- 🟣 Tạo nút Minimize tròn, nằm giữa màn hình
 local MinimizeButton = Instance.new("TextButton")
 MinimizeButton.Name = "MinimizeButton"
 MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
 MinimizeButton.Position = UDim2.new(0.5, -20, 0.5, -20) -- Giữa màn hình
 MinimizeButton.AnchorPoint = Vector2.new(0, 0)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 MinimizeButton.Text = "-"
 MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 MinimizeButton.TextScaled = true
-MinimizeButton.Visible = true
 MinimizeButton.Draggable = true
 MinimizeButton.Active = true
-MinimizeButton.Parent = game:GetService("CoreGui"):FindFirstChild("RobloxGui") or game.Players.LocalPlayer:WaitForChild("PlayerGui")
+MinimizeButton.Parent = Library.ScreenGui or game:GetService("CoreGui")
 
--- 🔵 Bo tròn góc
+-- Bo góc tròn
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(1, 0)
 UICorner.Parent = MinimizeButton
 
--- 🟢 Chức năng click thu nhỏ/mở rộng giao diện
+-- 🟢 Gọi hàm minimize có sẵn trong library
 MinimizeButton.MouseButton1Click:Connect(function()
-	if Window and Window.Minimize then
-		Window:Minimize()
+	if Library and Library.Minimize then
+		Library.Minimize() -- gọi trực tiếp hàm minimize có sẵn
 	else
-		print("⚠️ Không tìm thấy hàm Window:Minimize()")
+		warn("⚠️ Library.Minimize() không tồn tại hoặc chưa được khởi tạo.")
 	end
 end)
-
--- 🟠 Di chuyển được
-local UIS = game:GetService("UserInputService")
-local dragging, dragStart, startPos
-
-MinimizeButton.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		dragging = true
-		dragStart = input.Position
-		startPos = MinimizeButton.Position
-	end
-end)
-
-MinimizeButton.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
-		local delta = input.Position - dragStart
-		MinimizeButton.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-	end
-end)
-
-UIS.InputEnded:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		dragging = false
-	end
-end)
-
 
 
 
