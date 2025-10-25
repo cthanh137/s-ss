@@ -3199,8 +3199,8 @@ Window.TabHolder = New("ScrollingFrame", {
 -- 🖼️ Thêm ảnh nằm trên cùng của tab
 local TopImage = Instance.new("ImageLabel")
 TopImage.Name = "TabTopImage"
-TopImage.Image = "rbxassetid://12847781255" -- 🔹 ID ảnh của bạn
-TopImage.Size = UDim2.new(0, 120, 0, 120) -- 🔹 Kích thước ảnh
+TopImage.Image = "rbxassetid://10734897102" -- 🔹 ID ảnh của bạn
+TopImage.Size = UDim2.new(0, 50, 0, 59) -- 🔹 Kích thước ảnh
 TopImage.Position = UDim2.new(0, 10, 0, -65) -- 🔹 Nằm phía trên tab
 TopImage.BackgroundTransparency = 1
 TopImage.AnchorPoint = Vector2.new(0, 0)
@@ -7541,45 +7541,44 @@ end)
 	repeat task.wait() until Library and Library.Window and Library.Window.Minimize and game:GetService("CoreGui")
 
 	local parentGui = Library.ScreenGui or Instance.new("ScreenGui", game:GetService("CoreGui"))
-	parentGui.Name = "FluentPlus_ImageButton"
+	parentGui.Name = "FluentPlus_Button"
 	parentGui.IgnoreGuiInset = true
 	parentGui.ResetOnSpawn = false
 
-	-- 🖼️ Hình ảnh có thể click + di chuyển
-	local ImageButton = Instance.new("ImageButton")
-	ImageButton.Name = "FloatingMinimizeImage"
-	ImageButton.Size = UDim2.new(0, 55, 0, 55)
-	ImageButton.Position = UDim2.new(0, 10, 0.8, -30) -- 📍 Góc trái, giữa dưới
-	ImageButton.BackgroundTransparency = 1
-	ImageButton.Image = "rbxassetid://12847781255" -- 🔹 Ảnh bạn muốn dùng
-	ImageButton.ZIndex = 999
-	ImageButton.Draggable = true
-	ImageButton.Active = true
-	ImageButton.Selectable = true
-	ImageButton.Parent = parentGui
+	-- 🟣 Nút bấm tròn
+	local Button = Instance.new("TextButton")
+	Button.Name = "FloatingMinimizeButton"
+	Button.Size = UDim2.new(0, 50, 0,5	0)
+Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
+	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
+	Button.Text = "Hide Menu"
+	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Button.Font = Enum.Font.GothamBold
+	Button.TextScaled = true
+	Button.ZIndex = 999
+	Button.Draggable = true
+	Button.Active = true
+	Button.Parent = parentGui
 
-	-- 💫 Hiệu ứng hover (đổi độ sáng ảnh)
+	-- 🔵 Bo góc tròn
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(1, 0)
+	UICorner.Parent = Button
+
+	-- ✨ Hiệu ứng hover
 	local TweenService = game:GetService("TweenService")
-	local hoverTween
-	ImageButton.MouseEnter:Connect(function()
-		if hoverTween then hoverTween:Cancel() end
-		hoverTween = TweenService:Create(ImageButton, TweenInfo.new(0.15), {ImageTransparency = 0.2})
-		hoverTween:Play()
+	Button.MouseEnter:Connect(function()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
+	end)
+	Button.MouseLeave:Connect(function()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 60, 180)}):Play()
 	end)
 
-	ImageButton.MouseLeave:Connect(function()
-		if hoverTween then hoverTween:Cancel() end
-		hoverTween = TweenService:Create(ImageButton, TweenInfo.new(0.15), {ImageTransparency = 0})
-		hoverTween:Play()
-	end)
-
-	-- 🧩 Khi nhấn vào hình ảnh → gọi minimize GUI
-	ImageButton.MouseButton1Click:Connect(function()
+	-- 🧩 Bấm gọi đúng hàm minimize gốc của FluentPlus
+	Button.MouseButton1Click:Connect(function()
 		pcall(function()
 			if Library and Library.Window and Library.Window.Minimize then
 				Library.Window:Minimize()
-			else
-				warn("⚠️ Không tìm thấy hàm Library.Window:Minimize()")
 			end
 		end)
 	end)
