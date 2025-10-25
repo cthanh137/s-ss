@@ -7511,25 +7511,47 @@ end
 
 
 -- 🟣 Nút di chuyển bật/tắt Minimize (tương thích FluentPlus Beta.lua)
+-- 🟣 Nút di chuyển bật/tắt Minimize (FluentPlus Style)
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 
--- ⚙️ Tạo button chính
+-- 🔍 Tìm GUI cha hợp lệ (tự nhận diện môi trường)
+local parentGui = game.CoreGui:FindFirstChild("FluentPlus") or Library.gui or Library.Container
+if not parentGui then
+	local screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "MiniControl"
+	screenGui.Parent = game.CoreGui
+	parentGui = screenGui
+end
+
+-- ⚙️ Tạo nút chính
 local MinimizeButton = Instance.new("Frame")
 MinimizeButton.Name = "MiniButton"
-MinimizeButton.Parent = game.CoreGui:FindFirstChild("FluentPlus") or Library.gui or Library.Container
+MinimizeButton.Parent = parentGui
 MinimizeButton.BackgroundColor3 = Color3.fromRGB(126, 44, 182)
-MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
-MinimizeButton.Position = UDim2.new(0, 100, 0, 100)
+MinimizeButton.Size = UDim2.new(0, 55, 0, 55)
+MinimizeButton.Position = UDim2.new(0.5, -27, 0.5, -27) -- giữa màn hình
 MinimizeButton.Active = true
 MinimizeButton.Draggable = true
 MinimizeButton.BorderSizePixel = 0
 MinimizeButton.ZIndex = 999
 
--- 🟪 Làm bo tròn / hoặc vuông tùy chọn
+-- 🟪 Bo tròn (kiểu Fluent)
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(1, 0) -- bo tròn hoàn toàn
+corner.CornerRadius = UDim.new(1, 0) -- tròn hoàn toàn
 corner.Parent = MinimizeButton
+
+-- 💡 Shadow nhỏ kiểu Fluent
+local shadow = Instance.new("ImageLabel")
+shadow.Name = "Shadow"
+shadow.Parent = MinimizeButton
+shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+shadow.Position = UDim2.new(0.5, 0, 0.5, 5)
+shadow.Size = UDim2.new(1.4, 0, 1.4, 0)
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://1316045217"
+shadow.ImageTransparency = 0.8
+shadow.ZIndex = 998
 
 -- 🕹️ Icon bên trong
 local icon = Instance.new("ImageLabel")
@@ -7539,8 +7561,9 @@ icon.BackgroundTransparency = 1
 icon.AnchorPoint = Vector2.new(0.5, 0.5)
 icon.Position = UDim2.new(0.5, 0, 0.5, 0)
 icon.Size = UDim2.new(0.6, 0, 0.6, 0)
-icon.Image = "rbxassetid://6035067836" -- icon minimize (thay tùy thích)
+icon.Image = "rbxassetid://6035067836" -- icon minimize
 icon.ImageTransparency = 0.2
+icon.ZIndex = 1000
 
 -- 🎨 Hover hiệu ứng
 local function HoverEffect(hovering)
@@ -7548,11 +7571,10 @@ local function HoverEffect(hovering)
 		BackgroundColor3 = hovering and Color3.fromRGB(160, 75, 210) or Color3.fromRGB(126, 44, 182)
 	}):Play()
 end
-
 MinimizeButton.MouseEnter:Connect(function() HoverEffect(true) end)
 MinimizeButton.MouseLeave:Connect(function() HoverEffect(false) end)
 
--- 🔘 Sự kiện click: bật / tắt minimize
+-- 🔘 Sự kiện click bật/tắt minimize
 local isMinimized = false
 MinimizeButton.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -7560,15 +7582,13 @@ MinimizeButton.InputBegan:Connect(function(input)
 		if Library and Library.Minimize then
 			Library.Minimize(isMinimized)
 		end
-
-		-- 🔄 Đổi icon để báo trạng thái
 		TweenService:Create(icon, TweenInfo.new(0.25), {
 			ImageTransparency = isMinimized and 0.6 or 0.2
 		}):Play()
 	end
 end)
 
--- 🧭 Kéo di chuyển
+-- 🧭 Kéo di chuyển (vẫn giữ như cũ)
 local dragging, dragInput, dragStart, startPos
 MinimizeButton.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -7600,6 +7620,7 @@ UserInputService.InputChanged:Connect(function(input)
 		)
 	end
 end)
+
 
 task.wait(0.01)
 
