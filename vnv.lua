@@ -3161,39 +3161,44 @@ Components.Window = (function()
 		Window.TabWidth = Config.TabWidth
 
 		local Selector = New("Frame", {
-			Size = UDim2.fromOffset(4, 0),
-			BackgroundColor3 = Color3.fromRGB(76, 194, 255),
-			Position = UDim2.fromOffset(0, (Window.TabHolderTop or 45) + 0),
-			AnchorPoint = Vector2.new(0, 0.5),
-			ThemeTag = {
-				BackgroundColor3 = "Accent",
-			},
-		}, {
-			New("UICorner", {
-				CornerRadius = UDim.new(0, 9),
-			}),
-		})
+	Size = UDim2.fromOffset(0, 4), -- 🔹 Đổi từ dọc sang ngang (chiều rộng = động)
+	BackgroundColor3 = Color3.fromRGB(76, 194, 255),
+	Position = UDim2.fromOffset((Window.TabHolderLeft or 45) + 0, 0), -- 🔹 Tính vị trí ngang
+	AnchorPoint = Vector2.new(0.5, 0),
+	ThemeTag = {
+		BackgroundColor3 = "Accent",
+	},
+}, {
+	New("UICorner", {
+		CornerRadius = UDim.new(0, 9),
+	}),
+})
 
-		local ResizeStartFrame = New("Frame", {
-			Size = UDim2.fromOffset(20, 20),
-			BackgroundTransparency = 1,
-			Position = UDim2.new(1, -20, 1, -2),
-		})
+local ResizeStartFrame = New("Frame", {
+	Size = UDim2.fromOffset(20, 20),
+	BackgroundTransparency = 1,
+	Position = UDim2.new(1, -20, 1, -2),
+})
 
-		Window.TabHolder = New("ScrollingFrame", {
-			Size = UDim2.new(1, 0, 1, -45),
-			Position = UDim2.new(0, 0, 0, 45),
-			BackgroundTransparency = 1,
-			ScrollBarImageTransparency = 1,
-			ScrollBarThickness = 0,
-			BorderSizePixel = 0,
-			CanvasSize = UDim2.fromScale(0, 0),
-			ScrollingDirection = Enum.ScrollingDirection.Y,
-		}, {
-			New("UIListLayout", {
-				Padding = UDim.new(0, 4),
-			}),
-		})
+-- 🧩 TabHolder NẰM NGANG
+Window.TabHolder = New("ScrollingFrame", {
+	Size = UDim2.new(1, 0, 1, -45),
+	Position = UDim2.new(0, 0, 0, 45),
+	BackgroundTransparency = 1,
+	ScrollBarImageTransparency = 1,
+	ScrollBarThickness = 0,
+	BorderSizePixel = 0,
+	CanvasSize = UDim2.fromScale(0, 0),
+	ScrollingDirection = Enum.ScrollingDirection.X, -- 🔹 CHUYỂN THÀNH NGANG
+}, {
+	New("UIListLayout", {
+		FillDirection = Enum.FillDirection.Horizontal, -- 🔹 Sắp xếp các tab theo hàng ngang
+		Padding = UDim.new(0, 6), -- 🔹 Khoảng cách giữa tab
+		HorizontalAlignment = Enum.HorizontalAlignment.Left, -- 🔹 Căn trái
+		VerticalAlignment = Enum.VerticalAlignment.Top, -- 🔹 Canh trên
+	}),
+})
+
 
 
 		local SearchElements = {}
@@ -7532,10 +7537,10 @@ task.defer(function()
 	-- 🟣 Nút bấm tròn
 	local Button = Instance.new("TextButton")
 	Button.Name = "FloatingMinimizeButton"
-	Button.Size = UDim2.new(0, 60, 0, 60)
+	Button.Size = UDim2.new(0, 30, 0, 30)
 Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
 	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
-	Button.Text = "-"
+	Button.Text = "Hide Menu"
 	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Button.Font = Enum.Font.GothamBold
 	Button.TextScaled = true
@@ -7569,21 +7574,8 @@ Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
 end)
 
 -------------------
-	-- Giả sử bạn đã có GUI chính (MainFrame hoặc Window)
--- 🖼️ Thêm logo hình ảnh vào đầu danh sách tab
-local Logo = Instance.new("ImageLabel")
-Logo.Name = "TabLogo"
-Logo.Image = "rbxassetid://6889812791" -- 🟣 ID ảnh bạn muốn hiển thị
-Logo.BackgroundTransparency = 1
-Logo.Size = UDim2.new(0, 80, 0, 80) -- Kích thước hình
-Logo.Position = UDim2.new(0.5, -40, 0, 10) -- Căn giữa theo chiều ngang, cách trên 10px
-Logo.Parent = TabContainer
-Logo.ZIndex = 10
 
--- ⚙️ Giữ bố cục tab xuống dưới logo
-local Padding = Instance.new("UIPadding")
-Padding.PaddingTop = UDim.new(0, 95) -- Tạo khoảng cách để các tab bắt đầu dưới hình
-Padding.Parent = TabContainer
+-----------------------
 
 
 
