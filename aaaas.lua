@@ -7509,13 +7509,11 @@ local function AnimateProperty(object, property, startValue, endValue, duration)
 	end)
 end
 
-
--- 🟣 Nút di chuyển bật/tắt Minimize (tương thích FluentPlus Beta.lua)
--- 🟣 Nút di chuyển bật/tắt Minimize (FluentPlus Style)
+-- 🟣 Nút Minimize bo tròn giữa màn hình, chạy Window:Minimize()
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 
--- 🔍 Tìm GUI cha hợp lệ (tự nhận diện môi trường)
+-- 🔍 Tìm GUI cha hợp lệ
 local parentGui = game.CoreGui:FindFirstChild("FluentPlus") or Library.gui or Library.Container
 if not parentGui then
 	local screenGui = Instance.new("ScreenGui")
@@ -7524,24 +7522,24 @@ if not parentGui then
 	parentGui = screenGui
 end
 
--- ⚙️ Tạo nút chính
+-- ⚙️ Nút chính
 local MinimizeButton = Instance.new("Frame")
 MinimizeButton.Name = "MiniButton"
 MinimizeButton.Parent = parentGui
 MinimizeButton.BackgroundColor3 = Color3.fromRGB(126, 44, 182)
 MinimizeButton.Size = UDim2.new(0, 55, 0, 55)
-MinimizeButton.Position = UDim2.new(0.5, -27, 0.5, -27) -- giữa màn hình
+MinimizeButton.Position = UDim2.new(0.5, -27, 0.5, -27)
 MinimizeButton.Active = true
 MinimizeButton.Draggable = true
 MinimizeButton.BorderSizePixel = 0
 MinimizeButton.ZIndex = 999
 
--- 🟪 Bo tròn (kiểu Fluent)
+-- 🔘 Bo tròn hoàn toàn (Fluent Style)
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(1, 0) -- tròn hoàn toàn
+corner.CornerRadius = UDim.new(1, 0)
 corner.Parent = MinimizeButton
 
--- 💡 Shadow nhỏ kiểu Fluent
+-- 💡 Bóng mờ
 local shadow = Instance.new("ImageLabel")
 shadow.Name = "Shadow"
 shadow.Parent = MinimizeButton
@@ -7553,7 +7551,7 @@ shadow.Image = "rbxassetid://1316045217"
 shadow.ImageTransparency = 0.8
 shadow.ZIndex = 998
 
--- 🕹️ Icon bên trong
+-- 🕹️ Icon
 local icon = Instance.new("ImageLabel")
 icon.Name = "Icon"
 icon.Parent = MinimizeButton
@@ -7574,21 +7572,45 @@ end
 MinimizeButton.MouseEnter:Connect(function() HoverEffect(true) end)
 MinimizeButton.MouseLeave:Connect(function() HoverEffect(false) end)
 
--- 🔘 Sự kiện click bật/tắt minimize
-local isMinimized = false
+-- 🔘 Click: chạy Window:Minimize() + Notify
+local MinimizeNotif = false
 MinimizeButton.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		isMinimized = not isMinimized
-		if Library and Library.Minimize then
-			Library.Minimize(isMinimized)
+		if Window and typeof(Window.Minimize) == "function" then
+			pcall(function()
+				Window:Minimize()
+			end)
 		end
+
+		-- Hiệu ứng mờ icon khi minimized
 		TweenService:Create(icon, TweenInfo.new(0.25), {
-			ImageTransparency = isMinimized and 0.6 or 0.2
+			ImageTransparency = (Window and Window.Minimized) and 0.6 or 0.2
 		}):Play()
+
+		-- 🪄 Notify thông báo chỉ hiện 1 lần
+		if not MinimizeNotif and Library and Library.Notify then
+			MinimizeNotif = true
+			local Key = (Library.MinimizeKeybind and Library.MinimizeKeybind.Value) or (Library.MinimizeKey and Library.MinimizeKey.Name) or "RightShift"
+			local Mobile = UserInputService.TouchEnabled
+
+			if not Mobile then
+				Library:Notify({
+					Title = "Interface",
+					Content = "Press " .. Key .. " to toggle the interface.",
+					Duration = 6
+				})
+			else
+				Library:Notify({
+					Title = "Interface",
+					Content = "Tap the button to toggle the interface.",
+					Duration = 6
+				})
+			end
+		end
 	end
 end)
 
--- 🧭 Kéo di chuyển (vẫn giữ như cũ)
+-- 🧭 Kéo di chuyển
 local dragging, dragInput, dragStart, startPos
 MinimizeButton.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -7620,6 +7642,7 @@ UserInputService.InputChanged:Connect(function(input)
 		)
 	end
 end)
+
 
 
 task.wait(0.01)
