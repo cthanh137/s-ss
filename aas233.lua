@@ -7478,78 +7478,46 @@ AddSignal(MobileMinimizeButton.MouseButton1Click, function()
 	end
 end)
 
--- 🌌 FluentPlus Beta motor (rút gọn từ Beta.lua)
-local function NewMotor(startValue)
-	local self = {}
-	self.value = startValue or 0
-	self.goal = startValue or 0
-	self.speed = 8
-	function self:setGoal(goal)
-		self.goal = goal
-	end
-	function self:step(dt)
-		self.value += (self.goal - self.value) * math.min(dt * self.speed, 1)
-	end
-	return self
-end
-
--- ⚙️ Animation helper
-local function AnimateProperty(object, property, startValue, endValue, duration)
-	local motor = NewMotor(startValue)
-	local timeElapsed = 0
-	local connection
-
-	connection = game:GetService("RunService").RenderStepped:Connect(function(dt)
-		timeElapsed += dt
-		motor:setGoal(endValue)
-		motor:step(dt)
-		object[property] = motor.value
-		if timeElapsed >= duration then
-			object[property] = endValue
-			connection:Disconnect()
-		end
-	end)
-end
-
--- 🖼️ Thêm ImageButton (nút bấm có ảnh)
+------------------------------
 task.defer(function()
 	repeat task.wait() until Library and Library.Window and Library.Window.Minimize and game:GetService("CoreGui")
 
-	local imageId = 18465920768 -- 🟣 Thay bằng ID ảnh thật
-	local parentGui = Library.ScreenGui or game:GetService("CoreGui")
+	local parentGui = Library.ScreenGui or Instance.new("ScreenGui", game:GetService("CoreGui"))
+	parentGui.Name = "FluentPlus_Button"
+	parentGui.IgnoreGuiInset = true
+	parentGui.ResetOnSpawn = false
 
-	local button = Instance.new("ImageButton")
-	button.Name = "FloatingMinimizeIcon"
-	button.Image = "rbxassetid://" .. imageId
-	button.BackgroundTransparency = 1
-	button.ImageTransparency = 1 -- bắt đầu ẩn để fade-in
-	button.Size = UDim2.new(0, 80, 0, 80)
-	button.Position = UDim2.new(0.5, -40, 0.5, -40) -- giữa màn hình
-	button.ZIndex = 999
-	button.Active = true
-	button.Draggable = true
-	button.Parent = parentGui
+	-- 🟣 Nút bấm tròn
+	local Button = Instance.new("TextButton")
+	Button.Name = "FloatingMinimizeButton"
+	Button.Size = UDim2.new(0, 60, 0, 60)
+	Button.Position = UDim2.new(0.5, -30, 0.5, -30) -- giữa màn hình
+	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
+	Button.Text = "-"
+	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Button.Font = Enum.Font.GothamBold
+	Button.TextScaled = true
+	Button.ZIndex = 999
+	Button.Draggable = true
+	Button.Active = true
+	Button.Parent = parentGui
 
-	-- 🌫️ Hiệu ứng xuất hiện
-	task.wait(0.3)
+	-- 🔵 Bo góc tròn
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(1, 0)
+	UICorner.Parent = Button
+
+	-- ✨ Hiệu ứng hover
 	local TweenService = game:GetService("TweenService")
-	local startPos = button.Position
-	button.Position = startPos - UDim2.new(0, 0, 0, 20)
-	AnimateProperty(button, "ImageTransparency", 1, 0, 1)
-	TweenService:Create(button, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		Position = startPos
-	}):Play()
-
-	-- 💫 Hiệu ứng hover
-	button.MouseEnter:Connect(function()
-		TweenService:Create(button, TweenInfo.new(0.15), {ImageTransparency = 0.1}):Play()
+	Button.MouseEnter:Connect(function()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
 	end)
-	button.MouseLeave:Connect(function()
-		TweenService:Create(button, TweenInfo.new(0.15), {ImageTransparency = 0}):Play()
+	Button.MouseLeave:Connect(function()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 60, 180)}):Play()
 	end)
 
-	-- 🧩 Khi bấm thì gọi hàm minimize gốc từ FluentPlus
-	button.MouseButton1Click:Connect(function()
+	-- 🧩 Bấm gọi đúng hàm minimize gốc của FluentPlus
+	Button.MouseButton1Click:Connect(function()
 		pcall(function()
 			if Library and Library.Window and Library.Window.Minimize then
 				Library.Window:Minimize()
@@ -7558,8 +7526,7 @@ task.defer(function()
 	end)
 end)
 
-
-
+-------------------
 	
 
 
