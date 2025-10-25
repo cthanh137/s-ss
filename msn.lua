@@ -3199,7 +3199,7 @@ Window.TabHolder = New("ScrollingFrame", {
 -- 🖼️ Thêm ảnh nằm trên cùng của tab
 local TopImage = Instance.new("ImageLabel")
 TopImage.Name = "TabTopImage"
-TopImage.Image = "rbxassetid://10734897102" -- 🔹 ID ảnh của bạn
+TopImage.Image = "rbxassetid://2866390641" -- 🔹 ID ảnh của bạn
 TopImage.Size = UDim2.new(0, 120, 0, 120) -- 🔹 Kích thước ảnh
 TopImage.Position = UDim2.new(0, 35, 0, -65) -- 🔹 Nằm phía trên tab
 TopImage.BackgroundTransparency = 1
