@@ -184,7 +184,7 @@ local Themes = {
 	Text = Color3.fromRGB(235, 245, 255),
 	SubText = Color3.fromRGB(160, 180, 200),
 	Hover = Color3.fromRGB(0, 180, 255),
-	HoverChange = 0.05
+	HoverChange = 0.05,
 }
 	Light = {
 		Name = "Light",
