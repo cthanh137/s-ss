@@ -7533,7 +7533,7 @@ task.defer(function()
 	local Button = Instance.new("TextButton")
 	Button.Name = "FloatingMinimizeButton"
 	Button.Size = UDim2.new(0, 60, 0, 60)
-	Button.Position = UDim2.new(0.5, -30, 0.5, -30) -- giữa màn hình
+	Button.Position = UDim2.new(0, 10, 0, 10) -- giữa màn hình
 	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
 	Button.Text = "-"
 	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -7569,7 +7569,35 @@ task.defer(function()
 end)
 
 -------------------
-	
+	-- Giả sử bạn đã có GUI chính (MainFrame hoặc Window)
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 600, 0, 400)
+MainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = game.CoreGui
+
+-- 🖼️ Thêm hình ảnh góc trái trên cùng
+local Logo = Instance.new("ImageLabel")
+Logo.Image = "rbxassetid://6889812791"
+Logo.Size = UDim2.new(0, 40, 0, 40) -- kích thước hình
+Logo.Position = UDim2.new(0, 8, 0, 6) -- vị trí góc trái trên
+Logo.BackgroundTransparency = 1
+Logo.ImageTransparency = 0
+Logo.ZIndex = 10
+Logo.Parent = MainFrame
+
+-- (Tuỳ chọn) Hiệu ứng phát sáng hoặc viền màu
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(255, 130, 250) -- neon tím hồng theo theme
+UIStroke.Thickness = 1.5
+UIStroke.Parent = Logo
+
+-- (Tuỳ chọn) Làm tròn góc logo
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = Logo
+
 
 
 task.wait(0.01)
