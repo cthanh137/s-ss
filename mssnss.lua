@@ -3197,7 +3197,7 @@ Window.TabHolder = New("ScrollingFrame", {
 })
 
 -- 🖼️ Thêm ảnh nằm trên cùng của tab
-local ASSET_ID = 686452506
+local ASSET_ID = 89660160933436
 local thumbnailURL = "https://www.roblox.com/asset-thumbnail/image?assetId="..ASSET_ID.."&width=420&height=420&format=png"
 
 -- Tạo ImageLabel trên Tab
