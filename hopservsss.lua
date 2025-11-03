@@ -8,7 +8,7 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 
 local PLACE_ID     = game.PlaceId
-local MAX_PAGES    = 50
+local MAX_PAGES    = 10
 local RETRY_DELAY  = 0.01      -- delay siêu nhỏ để hop nhanh
 local HOP_COOLDOWN = 0.1      -- nghỉ chút trước teleport để an toàn
 
