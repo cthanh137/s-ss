@@ -3260,44 +3260,12 @@ end
 		Window.ShowSearch = (Config.Search == nil) and true or (Config.Search and true or false)
 
 	-- Tạo SearchFrame
-local SearchFrame = New("Frame", { Size = UDim2.new(1, 0, 0, 35), Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 0.9, ZIndex = 10, Visible = Window.ShowSearch, ThemeTag = { BackgroundColor3 = "Element", }, }, { New("UICorner", { CornerRadius = UDim.new(0, 6), }), New("UIStroke", { ApplyStrokeMode = Enum.ApplyStrokeMode.Border, Transparency = 0.8, Thickness = 1, ThemeTag = { Color = "ElementBorder", }, }), }) local SearchTextbox = Components.Textbox(SearchFrame, true) SearchTextbox.Frame.Size = UDim2.new(1, -44, 1, -8) SearchTextbox.Frame.Position = UDim2.new(0, 10, 0, 4) SearchTextbox.Input.PlaceholderText = "Search..." SearchTextbox.Input.Text = "" local SearchIcon = New("ImageLabel", { Size = UDim2.fromOffset(18, 18), Position = UDim2.new(1, -18, 0.5, 0), AnchorPoint = Vector2.new(0.5, 0.5), BackgroundTransparency = 1, Image = "rbxassetid://10734943674", Parent = SearchFrame, ThemeTag = { ImageColor3 = "SubText", }, })
 
 
-		Creator.AddSignal(SearchTextbox.Input:GetPropertyChangedSignal("Text"), function()
-			local searchText = SearchTextbox.Input.Text
-			UpdateElementVisibility(searchText)
-		end)
 
 
-		Creator.AddSignal(SearchTextbox.Input.FocusLost, function(enterPressed)
-		end)
 
-		Creator.AddSignal(UserInputService.InputBegan, function(input, gameProcessed)
-			if gameProcessed then return end
-
-			if input.KeyCode == Enum.KeyCode.Escape and SearchTextbox.Input:IsFocused() then
-				SearchTextbox.Input.Text = ""
-				SearchTextbox.Input:ReleaseFocus()
-			end
-		end)
-
-
-		Window.SearchElements = SearchElements
-		Window.AllElements = AllElements
-		Window.RegisterElement = RegisterElement
-		Window.UpdateElementVisibility = UpdateElementVisibility
-
-		local TabFrame = New("Frame", {
-			Size = UDim2.new(0, Window.TabWidth, 1, Window.ShowSearch and -66 or -31),
-			Position = UDim2.new(0, 12, 0, Window.ShowSearch and 54 or 19),
-			BackgroundTransparency = 1,
-			ClipsDescendants = true,
-		}, {
-			Window.TabHolder,
-			Selector,
-			SearchFrame,
-		})
-
+	
 		Window.TabDisplay = New("TextLabel", {
 			RichText = true,
 			Text = "Tab",
@@ -3668,12 +3636,7 @@ local SearchFrame = New("Frame", { Size = UDim2.new(1, 0, 0, 35), Position = UDi
 				end
 			end
 
-			function Window:ToggleSearch()
-				Window.ShowSearch = not Window.ShowSearch
-				SearchFrame.Visible = Window.ShowSearch
-				TabFrame.Size = UDim2.new(0, Window.TabWidth, 1, Window.ShowSearch and -66 or -31)
-				TabFrame.Position = UDim2.new(0, 12, 0, Window.ShowSearch and 54 or 19)
-			end
+			
 
 			if not RunService:IsStudio() and Library.Minimizer then
 				pcall(function()
