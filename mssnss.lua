@@ -3203,65 +3203,59 @@ local thumbnailURL = "https://www.roblox.com/asset-thumbnail/image?assetId="..AS
 -- Tạo ImageLabel trên Tab
 local TopImage = Instance.new("ImageLabel")
 TopImage.Name = "TabTopImage"
-TopImage.Image = thumbnailURL          -- 🔹 dùng thumbnail thay cho asset cũ
-TopImage.Size = UDim2.new(0, 120, 0, 120) -- 🔹 kích thước ảnh
-TopImage.Position = UDim2.new(0, 35, 0, -65) -- 🔹 nằm phía trên tab
+TopImage.Image = thumbnailURL
+TopImage.Size = UDim2.new(0, 120, 0, 120)
 TopImage.BackgroundTransparency = 1
-TopImage.AnchorPoint = Vector2.new(0, 0)
+TopImage.AnchorPoint = Vector2.new(0.5, 0) -- 🔹 Căn giữa theo chiều ngang
+TopImage.Position = UDim2.new(0.5, 0, 0, -65) -- 🔹 0.5 để căn giữa theo chiều ngang
 TopImage.Parent = Window.TabHolder
-TopImage.ScaleType = Enum.ScaleType.Fit    -- giữ tỉ lệ ảnh
+TopImage.ScaleType = Enum.ScaleType.Fit
 
--- Bo góc nhẹ cho ảnh (tùy chọn)
+-- Bo góc nhẹ cho ảnh
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = TopImage
 
--- Bo góc nhẹ cho ảnh (tùy chọn)
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 10)
-corner.Parent = TopImage
+-- Phần Search và Register (giữ nguyên)
+local SearchElements = {}
+local AllElements = {}
 
+local function UpdateElementVisibility(searchTerm)
+	searchTerm = string.lower(searchTerm or "")
 
-		local SearchElements = {}
-		local AllElements = {}
+	for element, data in pairs(AllElements) do
+		if element and element.Parent then
+			local shouldShow = searchTerm == "" or 
+				string.find(string.lower(data.title), searchTerm, 1, true) or
+				(data.description and string.find(string.lower(data.description), searchTerm, 1, true))
+			element.Visible = shouldShow
+		end
+	end
 
-		local function UpdateElementVisibility(searchTerm)
-			searchTerm = string.lower(searchTerm or "")
-
-			for element, data in pairs(AllElements) do
-				if element and element.Parent then
-					local shouldShow = searchTerm == "" or 
-						string.find(string.lower(data.title), searchTerm, 1, true) or
-						(data.description and string.find(string.lower(data.description), searchTerm, 1, true))
-					element.Visible = shouldShow
-				end
-			end
-
-			task.spawn(function()
-				task.wait(0.01)
-				if Window and Window.TabHolder then
-					for _, child in pairs(Window.TabHolder:GetChildren()) do
-						if child:IsA("ScrollingFrame") then
-							local layout = child:FindFirstChild("UIListLayout")
-							if layout then
-								child.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 2)
-							end
-						end
+	task.spawn(function()
+		task.wait(0.01)
+		if Window and Window.TabHolder then
+			for _, child in pairs(Window.TabHolder:GetChildren()) do
+				if child:IsA("ScrollingFrame") then
+					local layout = child:FindFirstChild("UIListLayout")
+					if layout then
+						child.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 2)
 					end
 				end
-			end)
-		end
-
-		local function RegisterElement(elementFrame, title, elementType, description)
-			if elementFrame and title then
-				AllElements[elementFrame] = {
-					title = title,
-					type = elementType or "Element",
-					description = description or ""
-				}
 			end
 		end
+	end)
+end
 
+local function RegisterElement(elementFrame, title, elementType, description)
+	if elementFrame and title then
+		AllElements[elementFrame] = {
+			title = title,
+			type = elementType or "Element",
+			description = description or ""
+		}
+	end
+end
 
 		Window.ShowSearch = (Config.Search == nil) and true or (Config.Search and true or false)
 
