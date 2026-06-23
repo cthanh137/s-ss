@@ -7500,13 +7500,16 @@ task.defer(function()
 	Button.Size = UDim2.new(0, 50, 0, 50)
 	Button.Position = UDim2.new(0, 10, 0.5, -15)
 	
-	-- THỬ VỚI ẢNH MẶC ĐỊNH TRƯỚC
-	Button.Image = "rbxassetid://89660160933436" -- Ảnh của bạn
-	-- Nếu không thấy, thử comment dòng trên và bỏ comment dòng dưới:
-	-- Button.Image = "rbxasset://textures/ui/Arrow.png"
+	-- ✅ CÁCH ĐÚNG: Upload ảnh lên Roblox trước
+	-- Bước 1: Vào Roblox Studio > Toolbox > My Assets > Images
+	-- Bước 2: Upload ảnh của bạn
+	-- Bước 3: Lấy ID (VD: 1234567890)
+	-- Bước 4: Thay vào dưới đây
+	Button.Image = "rbxassetid://89660160933436" -- ⚠️ ID này không hợp lệ!
 	
-	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180) -- Để nền có màu cho dễ thấy
-	Button.BackgroundTransparency = 0 -- Hiện nền để kiểm tra
+	-- ❌ Nếu ảnh lỗi, hiển thị nền tím
+	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
+	Button.BackgroundTransparency = 0 -- Hiện nền
 	Button.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	Button.ZIndex = 999
 	Button.Draggable = true
@@ -7515,15 +7518,9 @@ task.defer(function()
 
 	Button.ScaleType = Enum.ScaleType.Fit
 
-	-- Thêm text tạm để biết nút có tồn tại không
-	local label = Instance.new("TextLabel")
-	label.Size = UDim2.new(1, 0, 1, 0)
-	label.BackgroundTransparency = 1
-	label.Text = "?"
-	label.TextColor3 = Color3.fromRGB(255,255,255)
-	label.TextScaled = true
-	label.Parent = Button
-
+	-- 🟢 THỬ VỚI ẢNH CÓ SẴN CỦA ROBLOX
+	-- Button.Image = "rbxasset://textures/ui/Arrow.png" -- Comment dòng trên, bỏ comment dòng này
+	
 	-- Hiệu ứng hover
 	local TweenService = game:GetService("TweenService")
 	Button.MouseEnter:Connect(function()
@@ -7540,12 +7537,7 @@ task.defer(function()
 			end
 		end)
 	end)
-	
-	-- In ra để kiểm tra
-	print("Button created with ID: 89660160933436")
-	print("Button exists:", Button ~= nil)
 end)
-
 
 -------------------
 
