@@ -7494,33 +7494,34 @@ task.defer(function()
 	parentGui.IgnoreGuiInset = true
 	parentGui.ResetOnSpawn = false
 
-	-- 🟣 Nút bấm với Emoji
-	local Button = Instance.new("TextButton")
+	-- 🟣 Đổi từ TextButton sang ImageButton để hiển thị hình ảnh
+	local Button = Instance.new("ImageButton")
 	Button.Name = "FloatingMinimizeButton"
 	Button.Size = UDim2.new(0, 50, 0, 50)
 	Button.Position = UDim2.new(0, 10, 0.5, -15)
-	Button.BackgroundColor3 = Color3.fromRGB(0, 0, 0) 
-	Button.Text = "⭐"  -- 👈 Đổi emoji ở đây
-	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Button.Font = Enum.Font.SourceSansBold
-	Button.TextSize = 25
+	Button.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Màu nền mặc định (Tối)
+	
+	-- 🖼️ Cài đặt hình ảnh từ Asset ID của bạn
+	Button.Image = "rbxassetid://89660160933436"
+	Button.ScaleType = Enum.ScaleType.Fit -- Giữ nguyên tỷ lệ ảnh, không bị méo
+	
 	Button.ZIndex = 999
 	Button.Draggable = true
 	Button.Active = true
 	Button.Parent = parentGui
 
-	-- 🔵 Bo góc tròn
+	-- 🔵 Sửa bo góc tròn nhẹ (Thay đổi từ hình tròn thành bo 8 pixel)
 	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(1, 0)
+	UICorner.CornerRadius = UDim.new(0, 8) -- Thay đổi số 8 nếu muốn bo nhiều hoặc ít hơn
 	UICorner.Parent = Button
 
-	-- ✨ Hiệu ứng hover
+	-- ✨ Hiệu ứng Hover (Đã đồng bộ màu nền lúc bắt đầu và lúc rời chuột)
 	local TweenService = game:GetService("TweenService")
 	Button.MouseEnter:Connect(function()
 		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
 	end)
 	Button.MouseLeave:Connect(function()
-		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 60, 180)}):Play()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
 	end)
 
 	-- 🧩 Bấm gọi minimize
