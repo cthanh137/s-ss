@@ -7486,7 +7486,7 @@ AddSignal(MobileMinimizeButton.MouseButton1Click, function()
 end)
 
 ------------------------------
-	task.defer(function()
+task.defer(function()
 	repeat task.wait() until Library and Library.Window and Library.Window.Minimize and game:GetService("CoreGui")
 
 	local parentGui = Library.ScreenGui or Instance.new("ScreenGui", game:GetService("CoreGui"))
@@ -7498,29 +7498,41 @@ end)
 	local Button = Instance.new("ImageButton")
 	Button.Name = "FloatingMinimizeButton"
 	Button.Size = UDim2.new(0, 50, 0, 50)
-	Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
-	Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Button.BackgroundTransparency = 1 -- Ẩn nền
+	Button.Position = UDim2.new(0, 10, 0.5, -15)
+	
+	-- THỬ VỚI ẢNH MẶC ĐỊNH TRƯỚC
 	Button.Image = "rbxassetid://89660160933436" -- Ảnh của bạn
+	-- Nếu không thấy, thử comment dòng trên và bỏ comment dòng dưới:
+	-- Button.Image = "rbxasset://textures/ui/Arrow.png"
+	
+	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180) -- Để nền có màu cho dễ thấy
+	Button.BackgroundTransparency = 0 -- Hiện nền để kiểm tra
 	Button.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	Button.ZIndex = 999
 	Button.Draggable = true
 	Button.Active = true
 	Button.Parent = parentGui
 
-	-- 🔄 Scale ảnh cho vừa
 	Button.ScaleType = Enum.ScaleType.Fit
 
-	-- ✨ Hiệu ứng hover (thay đổi độ sáng)
+	-- Thêm text tạm để biết nút có tồn tại không
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, 0, 1, 0)
+	label.BackgroundTransparency = 1
+	label.Text = "?"
+	label.TextColor3 = Color3.fromRGB(255,255,255)
+	label.TextScaled = true
+	label.Parent = Button
+
+	-- Hiệu ứng hover
 	local TweenService = game:GetService("TweenService")
 	Button.MouseEnter:Connect(function()
-		TweenService:Create(Button, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(200, 200, 200)}):Play()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
 	end)
 	Button.MouseLeave:Connect(function()
-		TweenService:Create(Button, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 60, 180)}):Play()
 	end)
 
-	-- 🧩 Bấm gọi đúng hàm minimize gốc của FluentPlus
 	Button.MouseButton1Click:Connect(function()
 		pcall(function()
 			if Library and Library.Window and Library.Window.Minimize then
@@ -7528,6 +7540,10 @@ end)
 			end
 		end)
 	end)
+	
+	-- In ra để kiểm tra
+	print("Button created with ID: 89660160933436")
+	print("Button exists:", Button ~= nil)
 end)
 
 
