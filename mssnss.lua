@@ -3200,35 +3200,6 @@ Window.TabHolder = New("ScrollingFrame", {
 
 
 -- Phần Search và Register (giữ nguyên)
-local SearchElements = {}
-local AllElements = {}
-
-local function UpdateElementVisibility(searchTerm)
-	searchTerm = string.lower(searchTerm or "")
-
-	for element, data in pairs(AllElements) do
-		if element and element.Parent then
-			local shouldShow = searchTerm == "" or 
-				string.find(string.lower(data.title), searchTerm, 1, true) or
-				(data.description and string.find(string.lower(data.description), searchTerm, 1, true))
-			element.Visible = shouldShow
-		end
-	end
-
-	task.spawn(function()
-		task.wait(0.01)
-		if Window and Window.TabHolder then
-			for _, child in pairs(Window.TabHolder:GetChildren()) do
-				if child:IsA("ScrollingFrame") then
-					local layout = child:FindFirstChild("UIListLayout")
-					if layout then
-						child.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 2)
-					end
-				end
-			end
-		end
-	end)
-end
 
 local function RegisterElement(elementFrame, title, elementType, description)
 	if elementFrame and title then
