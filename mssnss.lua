@@ -3197,24 +3197,7 @@ Window.TabHolder = New("ScrollingFrame", {
 })
 
 -- 🖼️ Thêm ảnh nằm trên cùng của tab
-local ASSET_ID = 89660160933436
-local thumbnailURL = "https://www.roblox.com/asset-thumbnail/image?assetId="..ASSET_ID.."&width=420&height=420&format=png"
 
--- Tạo ImageLabel trên Tab
-local TopImage = Instance.new("ImageLabel")
-TopImage.Name = "TabTopImage"
-TopImage.Image = thumbnailURL
-TopImage.Size = UDim2.new(0, 120, 0, 120)
-TopImage.BackgroundTransparency = 1
-TopImage.AnchorPoint = Vector2.new(0.5, 0) -- 🔹 Căn giữa theo chiều ngang
-TopImage.Position = UDim2.new(0.5, 0, 0, -65) -- 🔹 0.5 để căn giữa theo chiều ngang
-TopImage.Parent = Window.TabHolder
-TopImage.ScaleType = Enum.ScaleType.Fit
-
--- Bo góc nhẹ cho ảnh
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 10)
-corner.Parent = TopImage
 
 -- Phần Search và Register (giữ nguyên)
 local SearchElements = {}
@@ -7511,33 +7494,30 @@ end)
 	parentGui.IgnoreGuiInset = true
 	parentGui.ResetOnSpawn = false
 
-	-- 🟣 Nút bấm tròn
-	local Button = Instance.new("TextButton")
+	-- 🖼️ Nút bấm hình ảnh
+	local Button = Instance.new("ImageButton")
 	Button.Name = "FloatingMinimizeButton"
-	Button.Size = UDim2.new(0, 50, 0,50)
-Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
-	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
-	Button.Text = "Hide Menu"
-	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Button.Font = Enum.Font.GothamBold
-	Button.TextScaled = true
+	Button.Size = UDim2.new(0, 50, 0, 50)
+	Button.Position = UDim2.new(0, 10, 0.5, -15) -- giữa màn hình
+	Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Button.BackgroundTransparency = 1 -- Ẩn nền
+	Button.Image = "rbxassetid://89660160933436" -- Ảnh của bạn
+	Button.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	Button.ZIndex = 999
 	Button.Draggable = true
 	Button.Active = true
 	Button.Parent = parentGui
 
-	-- 🔵 Bo góc tròn
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(1, 0)
-	UICorner.Parent = Button
+	-- 🔄 Scale ảnh cho vừa
+	Button.ScaleType = Enum.ScaleType.Fit
 
-	-- ✨ Hiệu ứng hover
+	-- ✨ Hiệu ứng hover (thay đổi độ sáng)
 	local TweenService = game:GetService("TweenService")
 	Button.MouseEnter:Connect(function()
-		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
+		TweenService:Create(Button, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(200, 200, 200)}):Play()
 	end)
 	Button.MouseLeave:Connect(function()
-		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 60, 180)}):Play()
+		TweenService:Create(Button, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 	end)
 
 	-- 🧩 Bấm gọi đúng hàm minimize gốc của FluentPlus
