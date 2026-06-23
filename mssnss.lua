@@ -3916,7 +3916,7 @@ ElementsTable.Dropdown = (function()
 			Opened = false,
 			Type = "Dropdown",
 			Callback = Config.Callback or function() end,
-			Search = (Config.Search == nil) and true or Config.Search,
+			Search = false,
 			KeepSearch = Config.KeepSearch == true
 		}
 
@@ -4008,84 +4008,7 @@ ElementsTable.Dropdown = (function()
 			DropdownListLayout,
 		})
 
-		local SearchBar
-		local SearchBox
-		if Dropdown.Search then
-			SearchBar = New("Frame", {
-				Size = UDim2.new(1, -10, 0, 28),
-				Position = UDim2.fromOffset(5, 5),
-				BackgroundTransparency = 0.15,
-				ThemeTag = { BackgroundColor3 = "DropdownFrame" },
-				ZIndex = 24,
-			}, {
-				New("UICorner", { CornerRadius = UDim.new(0, 8) }),
-				New("UIStroke", { Name = "Stroke", Transparency = 0.45, ApplyStrokeMode = Enum.ApplyStrokeMode.Border, ThemeTag = { Color = "DropdownBorder" } }),
-				New("ImageLabel", {
-					Image = "rbxassetid://10734943674",
-					BackgroundTransparency = 1,
-					Size = UDim2.fromOffset(16, 16),
-					Position = UDim2.fromOffset(8, 6),
-					ZIndex = 25,
-					ThemeTag = { ImageColor3 = "SubText" },
-				}),
-			})
 
-			SearchBox = New("TextBox", {
-				PlaceholderText = "Search",
-				ClearTextOnFocus = false,
-				Text = "",
-				TextSize = 14,
-				FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Medium, Enum.FontStyle.Normal),
-				TextXAlignment = Enum.TextXAlignment.Left,
-				TextColor3 = Color3.fromRGB(225, 225, 225),
-				TextTransparency = 0.05,
-				BackgroundTransparency = 1,
-				ThemeTag = { TextColor3 = "SubText", PlaceholderColor3 = "SubText" },
-				Parent = SearchBar,
-				Size = UDim2.new(1, -34, 1, 0),
-				Position = UDim2.fromOffset(28, 0),
-				ZIndex = 24,
-			})
-
-			local SearchStroke = SearchBar:FindFirstChild("Stroke")
-			Creator.AddSignal(SearchBox.Focused, function()
-				Creator.OverrideTag(SearchBar, { BackgroundColor3 = "DropdownFrame" })
-				if SearchStroke then
-					Creator.OverrideTag(SearchStroke, { Color = "Accent" })
-					SearchStroke.Transparency = 0.25
-				end
-			end)
-			Creator.AddSignal(SearchBox.FocusLost, function()
-				Creator.OverrideTag(SearchBar, { BackgroundColor3 = "DropdownFrame" })
-				if SearchStroke then
-					Creator.OverrideTag(SearchStroke, { Color = "DropdownBorder" })
-					SearchStroke.Transparency = 0.45
-				end
-			end)
-
-			DropdownScrollFrame.Position = UDim2.fromOffset(5, 38)
-			DropdownScrollFrame.Size = UDim2.new(1, -5, 1, -43)
-
-			local filterToken = 0
-			local function ApplyFilter()
-				filterToken += 1
-				local myToken = filterToken
-				task.delay(0.03, function()
-					if myToken ~= filterToken then return end
-					local text = (SearchBox.Text or ""):lower()
-					for _, element in next, DropdownScrollFrame:GetChildren() do
-						if not element:IsA("UIListLayout") then
-							local value = element:FindFirstChild("ButtonLabel") and element.ButtonLabel.Text or ""
-							element.Visible = text == "" or value:lower():find(text, 1, true) ~= nil
-						end
-					end
-					RecalculateCanvasSize()
-					RecalculateListSize()
-				end)
-			end
-
-			Creator.AddSignal(SearchBox:GetPropertyChangedSignal("Text"), ApplyFilter)
-		end
 
 		local DropdownHolderFrame = New("Frame", {
 			Size = UDim2.fromScale(1, 0.6),
@@ -4222,9 +4145,7 @@ ElementsTable.Dropdown = (function()
 					frame.Visible = false
 				end
 			end
-			if SearchBox and not Dropdown.KeepSearch then
-				SearchBox.Text = ""
-			end
+			
 			DropdownHolderCanvas.Visible = true
 			TweenService:Create(
 				DropdownHolderFrame,
