@@ -7494,34 +7494,27 @@ task.defer(function()
 	parentGui.IgnoreGuiInset = true
 	parentGui.ResetOnSpawn = false
 
-	-- 🖼️ Nút bấm hình ảnh
-	local Button = Instance.new("ImageButton")
+	-- 🟣 Nút bấm với Emoji
+	local Button = Instance.new("TextButton")
 	Button.Name = "FloatingMinimizeButton"
 	Button.Size = UDim2.new(0, 50, 0, 50)
 	Button.Position = UDim2.new(0, 10, 0.5, -15)
-	
-	-- ✅ CÁCH ĐÚNG: Upload ảnh lên Roblox trước
-	-- Bước 1: Vào Roblox Studio > Toolbox > My Assets > Images
-	-- Bước 2: Upload ảnh của bạn
-	-- Bước 3: Lấy ID (VD: 1234567890)
-	-- Bước 4: Thay vào dưới đây
-	Button.Image = "rbxassetid://89660160933436" -- ⚠️ ID này không hợp lệ!
-	
-	-- ❌ Nếu ảnh lỗi, hiển thị nền tím
 	Button.BackgroundColor3 = Color3.fromRGB(90, 60, 180)
-	Button.BackgroundTransparency = 0 -- Hiện nền
-	Button.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	Button.Text = "⭐"  -- 👈 Đổi emoji ở đây
+	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Button.Font = Enum.Font.SourceSansBold
+	Button.TextSize = 25
 	Button.ZIndex = 999
 	Button.Draggable = true
 	Button.Active = true
 	Button.Parent = parentGui
 
-	Button.ScaleType = Enum.ScaleType.Fit
+	-- 🔵 Bo góc tròn
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(1, 0)
+	UICorner.Parent = Button
 
-	-- 🟢 THỬ VỚI ẢNH CÓ SẴN CỦA ROBLOX
-	-- Button.Image = "rbxasset://textures/ui/Arrow.png" -- Comment dòng trên, bỏ comment dòng này
-	
-	-- Hiệu ứng hover
+	-- ✨ Hiệu ứng hover
 	local TweenService = game:GetService("TweenService")
 	Button.MouseEnter:Connect(function()
 		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
@@ -7530,6 +7523,7 @@ task.defer(function()
 		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(90, 60, 180)}):Play()
 	end)
 
+	-- 🧩 Bấm gọi minimize
 	Button.MouseButton1Click:Connect(function()
 		pcall(function()
 			if Library and Library.Window and Library.Window.Minimize then
@@ -7538,7 +7532,6 @@ task.defer(function()
 		end)
 	end)
 end)
-
 -------------------
 
 -----------------------
