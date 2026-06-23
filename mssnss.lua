@@ -7418,7 +7418,7 @@ task.defer(function()
 	-- 🟣 Đổi từ TextButton sang ImageButton để hiển thị hình ảnh
 	local Button = Instance.new("ImageButton")
 	Button.Name = "FloatingMinimizeButton"
-	Button.Size = UDim2.new(0, 80, 0, 80)
+	Button.Size = UDim2.new(0, 60, 0, 60)
 	Button.Position = UDim2.new(0, 10, 0.5, -15)
 	Button.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Màu nền mặc định (Tối)
 	
