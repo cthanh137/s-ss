@@ -7418,7 +7418,7 @@ task.defer(function()
 	-- 🟣 Đổi từ TextButton sang ImageButton để hiển thị hình ảnh
 	local Button = Instance.new("ImageButton")
 	Button.Name = "FloatingMinimizeButton"
-	Button.Size = UDim2.new(0, 50, 0, 50)
+	Button.Size = UDim2.new(0, 150, 0, 150)
 	Button.Position = UDim2.new(0, 10, 0.5, -15)
 	Button.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Màu nền mặc định (Tối)
 	
@@ -7439,7 +7439,7 @@ task.defer(function()
 	-- ✨ Hiệu ứng Hover (Đã đồng bộ màu nền lúc bắt đầu và lúc rời chuột)
 	local TweenService = game:GetService("TweenService")
 	Button.MouseEnter:Connect(function()
-		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(120, 80, 220)}):Play()
+		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
 	end)
 	Button.MouseLeave:Connect(function()
 		TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
